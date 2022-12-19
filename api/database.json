@@ -1,0 +1,47 @@
+{
+    "itemList": [
+        {
+            "name": "Iron ore",
+            "recipe": [],
+            "time": 0,
+            "machineType": "Mining"
+        },
+        {
+            "name": "Iron plate",
+            "recipe": [
+                {
+                    "number": 1,
+                    "item": "Iron ore"
+                }
+            ],
+            "time": 3.2,
+            "machineType": "Furnace"
+        },
+        {
+            "name": "Iron gear wheel",
+            "recipe": [
+                {
+                    "number": 2,
+                    "item": "Iron plate"
+                }
+            ],
+            "time": 0.5,
+            "machineType": "Assembling"
+        },
+        {
+            "name": "Transport belt",
+            "recipe": [
+                {
+                    "number": 1,
+                    "item": "Iron gear wheel"
+                },
+                {
+                    "number": 1,
+                    "item": "Iron plate"
+                }
+            ],
+            "time": 0.5,
+            "machineType": "Assembling"
+        }
+    ]
+}
