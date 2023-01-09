@@ -6,6 +6,7 @@ type Ingredient struct {
 }
 
 type Item struct {
+	Id          int          `json:"id"`
 	Name        string       `json:"name"`
 	Recipe      []Ingredient `json:"recipe"`
 	Time        float32      `json:"time"`
