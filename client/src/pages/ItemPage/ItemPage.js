@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom'
 import { useApi } from "../../hooks/useApi";
 import { services } from "../../services";
 import { useNavigate } from "react-router-dom";
-import "./itemlistpage.css";
 import Item from "../../components/ui/Item";
 
 export const ItemPage = () => {
@@ -13,7 +12,7 @@ export const ItemPage = () => {
     navigate("/fullItems");
     };
   const params = useParams()
-  const [state] = useApi(services.getItemById, [], params.item_id);
+  const [state] = useApi(services.getItemByName, [], params.item_name);
 
   return (
     <div data-cy="detail-page" style={{ textAlign: "center" }}>

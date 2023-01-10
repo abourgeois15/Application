@@ -3,20 +3,20 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./item.css";
 
-const ItemList = ({items}) => {
+const MachineList = ({machines}) => {
   const navigate = useNavigate();
-  const navigateToItem = (name) => {
+  const navigateToMachine = (name) => {
     // 👇️ navigate to /
     console.log(name)
     navigate("./" + name);
   };
-  return items.itemList && items.itemList.map((item, index) => (
+  return machines.machineList && machines.machineList.map((machine, index) => (
     <div data-cy="article-container" className="container" key={index}>
       <div data-cy="item" className="itemContainer">
-        <p data-cy="name" className="title" onClick={() => {navigateToItem(item.name)}}>{item.name}</p>
+        <p data-cy="name" className="title" onClick={() => {navigateToMachine(machine.name)}}>{machine.name}</p>
       </div>
     </div>
   ));
 };
 
-export default ItemList;
+export default MachineList;

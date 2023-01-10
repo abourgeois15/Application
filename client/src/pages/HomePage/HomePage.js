@@ -1,9 +1,6 @@
-import { services } from "../../services";
-import { useApi } from "../../hooks/useApi";
 import "./homepage.css";
 
 export const HomePage = () => {
-  useApi(services.getItems, []);
 
   return (
     <div data-cy="home-page" className="homePageWrapper">
@@ -14,7 +11,12 @@ export const HomePage = () => {
 
       <div className="linkContainer">
         <a data-cy="link" className="link" href="/fullItems">
-          Details
+          Items
+        </a>
+      </div>
+      <div className="linkContainer">
+        <a data-cy="link" className="link" href="/fullMachines">
+          Machines
         </a>
       </div>
     </div>

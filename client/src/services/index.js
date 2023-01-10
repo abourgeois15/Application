@@ -9,9 +9,28 @@ export const getItems = async () => {
   }
 };
 
-export const getItemById = async (id) => {
+export const getItemByName = async (name) => {
  
-  const url = `${BASE_URL}/items/${id}`;
+  const url = `${BASE_URL}/items/${name}`;
+  console.log(url)
+  const response = await fetch(url);
+  if (response.ok) {
+    return response.json();
+  }
+};
+
+export const getMachines = async () => {
+
+  const url = `${BASE_URL}/machines`;
+  const response = await fetch(url);
+  if (response.ok) {
+    return response.json();
+  }
+};
+
+export const getMachineByName = async (name) => {
+ 
+  const url = `${BASE_URL}/machines/${name}`;
   console.log(url)
   const response = await fetch(url);
   if (response.ok) {
@@ -21,5 +40,7 @@ export const getItemById = async (id) => {
 
 export const services = {
     getItems,
-    getItemById
+    getItemByName,
+    getMachines,
+    getMachineByName
 };
