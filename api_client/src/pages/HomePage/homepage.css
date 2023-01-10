@@ -1,0 +1,36 @@
+.homePageWrapper {
+    font-family: Arial;
+    background-color: #f1f1f1;
+    height : 97vh;
+}
+
+.contentContainer {
+    padding: 30px;
+    text-align: center;
+    background-color: #283593;
+}
+
+.header {
+    color: #fff;
+    font-size: 50px;
+}
+
+.motto {
+    font-family: Arial; 
+    font-size: 26px;
+    color: #fefefe;
+}
+
+.linkContainer {
+    overflow: hidden;
+    background-color: #666
+}
+
+.link {
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    text-decoration: none;
+    padding: 20px;
+    font-size: 30px;
+}
