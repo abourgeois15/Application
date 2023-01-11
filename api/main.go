@@ -2,6 +2,7 @@ package main
 
 import (
 	"api/service"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,5 +15,8 @@ func main() {
 	router.GET("/machines", service.GetAllMachines)
 	router.GET("/machines/:machine_id", service.GetMachineById)
 
-	router.Run("localhost:8080")
+	err := router.Run("localhost:8080")
+	if err != nil {
+		log.Fatal("Error when opening server: ", err)
+	}
 }

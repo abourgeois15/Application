@@ -3,13 +3,13 @@ package config
 import (
 	"api/entities"
 	"encoding/json"
-	"io/ioutil"
 	"log"
+	"os"
 )
 
 func GetItems() []entities.Item {
 
-	content, err := ioutil.ReadFile("./items.json")
+	content, err := os.ReadFile("./items.json")
 	if err != nil {
 		log.Fatal("Error when opening file: ", err)
 	}
@@ -24,7 +24,7 @@ func GetItems() []entities.Item {
 
 func GetMachines() []entities.Machine {
 
-	content, err := ioutil.ReadFile("./machines.json")
+	content, err := os.ReadFile("./machines.json")
 	if err != nil {
 		log.Fatal("Error when opening file: ", err)
 	}
