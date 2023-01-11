@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./item.css";
 
-const ItemList = ({items}) => {
+const ItemList = ({items, value}) => {
   const navigate = useNavigate();
   const navigateToItem = (name) => {
     // 👇️ navigate to /
@@ -13,7 +13,7 @@ const ItemList = ({items}) => {
   return items.map((item, index) => (
     <div data-cy="article-container" className="container" key={index}>
       <div data-cy="item" className="itemContainer">
-        <p data-cy="name" className="title" onClick={() => {navigateToItem(item.name)}}>{item.name}</p>
+        {(item.name.toLowerCase().includes(value)) && <p data-cy="name" className="title" onClick={() => {navigateToItem(item.name)}}>{item.name}</p>}
       </div>
     </div>
   ));
