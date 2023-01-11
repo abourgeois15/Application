@@ -12,7 +12,7 @@ func main() {
 	router.GET("/items/:item_name", service.GetItemByName)
 
 	router.GET("/machines", service.GetAllMachines)
-	router.GET("/machines/:machine_name", service.GetMachineByName)
+	router.GET("/machines/:machine_id", service.GetMachineById)
 
 	router.Run("localhost:8080")
 }

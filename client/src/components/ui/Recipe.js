@@ -5,10 +5,10 @@ import "./item.css";
 
 const Recipe = ({ingredients}) => {
   const navigate = useNavigate();
-  const navigateToItem = (id) => {
+  const navigateToItem = (item) => {
     // 👇️ navigate to /
-    console.log(id)
-    navigate("/fullItems/" + id);
+    console.log(item)
+    navigate("/fullItems/" + item);
   };
   return (
     <div data-cy="article-container" className="container">

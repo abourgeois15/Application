@@ -17,7 +17,7 @@ export const ItemPage = () => {
   return (
     <div data-cy="detail-page" style={{ textAlign: "center" }}>
       <h1  data-cy="header" style={{ textAlign: "center"}}>Item</h1>
-        <button data-cy="A-goback-button" className="buttonA buttonAA" onClick={navigateToItems}>Go Back Items Page</button>
+        <button data-cy="A-goback-button" className="buttonA buttonAA" onClick={navigateToItems}>Go Back To Items Page</button>
         <Item item={state}/>
     </div>
   );

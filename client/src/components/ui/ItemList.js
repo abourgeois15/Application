@@ -10,7 +10,7 @@ const ItemList = ({items}) => {
     console.log(name)
     navigate("./" + name);
   };
-  return items.itemList && items.itemList.map((item, index) => (
+  return items.map((item, index) => (
     <div data-cy="article-container" className="container" key={index}>
       <div data-cy="item" className="itemContainer">
         <p data-cy="name" className="title" onClick={() => {navigateToItem(item.name)}}>{item.name}</p>

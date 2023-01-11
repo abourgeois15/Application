@@ -28,9 +28,9 @@ export const getMachines = async () => {
   }
 };
 
-export const getMachineByName = async (name) => {
+export const getMachineById = async (id) => {
  
-  const url = `${BASE_URL}/machines/${name}`;
+  const url = `${BASE_URL}/machines/${id}`;
   console.log(url)
   const response = await fetch(url);
   if (response.ok) {
@@ -42,5 +42,5 @@ export const services = {
     getItems,
     getItemByName,
     getMachines,
-    getMachineByName
+    getMachineById
 };

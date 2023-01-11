@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func GetItems() entities.ItemList {
+func GetItems() []entities.Item {
 
 	content, err := ioutil.ReadFile("./items.json")
 	if err != nil {
@@ -19,10 +19,10 @@ func GetItems() entities.ItemList {
 	if err != nil {
 		log.Fatal("Error during Unmarshal(): ", err)
 	}
-	return data
+	return data.ItemList
 }
 
-func GetMachines() entities.MachineList {
+func GetMachines() []entities.Machine {
 
 	content, err := ioutil.ReadFile("./machines.json")
 	if err != nil {
@@ -34,5 +34,5 @@ func GetMachines() entities.MachineList {
 	if err != nil {
 		log.Fatal("Error during Unmarshal(): ", err)
 	}
-	return data
+	return data.MachineList
 }
