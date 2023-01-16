@@ -1,0 +1,23 @@
+version: '3'
+services:
+  db_mysql:
+     build: ./database
+     container_name: db_mysql
+     ports: 
+       - 3306:3306
+     environment:
+       - MYSQL_USER=admin 
+       - MYSQL_DATABASE=newdockerdb
+       - MYSQL_ROOT_PASSWORD=secret
+       - MYSQL_HOST=db_mysql
+       - MYSQL_PASSWORD=secret
+       - MYSQL_PORT=3306
+     volumes:
+       - database_mysql:/var/lib/mysql
+     networks:
+       - default
+     command: --default-authentication-plugin=mysql_native_password  
+  
+volumes:
+  database_mysql:                   
+

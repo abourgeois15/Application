@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api/config"
 	"api/service"
 	"log"
 
@@ -8,6 +9,7 @@ import (
 )
 
 func main() {
+	config.ConnectMySQLDB()
 	router := gin.Default()
 	router.GET("/items", service.GetAllItems)
 	router.GET("/items/:item_name", service.GetItemByName)

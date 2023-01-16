@@ -14,6 +14,7 @@ export const ItemListPage = () => {
   };
 
   const [state] = useApi(services.getItems, []);
+  console.log(state)
   const [value, setValue] = useState("");
 
   //handleChange function for search
