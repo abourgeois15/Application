@@ -3,45 +3,44 @@ package mysqloperations
 import (
 	"api/entities"
 	"database/sql"
+	"fmt"
 )
 
 type ItemModel struct {
 	Db *sql.DB
 }
 
-// func (itemModel ItemModel) Delete(id int64) (int64, error) {
+func (itemModel ItemModel) Delete(name string) (int64, error) {
 
-// 	result, err := itemModel.Db.Exec("DELETE FROM items WHERE id=?", id)
-// 	if err != nil {
-// 		return 0, err
-// 	} else {
-// 		return result.RowsAffected()
-// 	}
+	result, err := itemModel.Db.Exec("DELETE FROM items WHERE name=?", name)
+	if err != nil {
+		return 0, err
+	} else {
+		return result.RowsAffected()
+	}
 
-// }
+}
 
-// func (itemModel ItemModel) Update(item entities.Item) (int64, error) {
+func (itemModel ItemModel) Update(item entities.Item) (int64, error) {
+	result, err := itemModel.Db.Exec("UPDATE items SET time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, result=?, machineType=? WHERE name=?", item.Time, item.Recipe[0].Number, item.Recipe[0].Item, item.Recipe[1].Number, item.Recipe[1].Item, item.Recipe[2].Number, item.Recipe[2].Item, item.Result, item.MachineType, item.Name)
+	if err != nil {
+		return 0, err
+	} else {
+		return result.RowsAffected()
+	}
 
-// 	result, err := itemModel.Db.Exec("UPDATE author SET name=?, email=?, WHERE id=?", item.Name, item.Email, item.Id)
-// 	if err != nil {
-// 		return 0, err
-// 	} else {
-// 		return result.RowsAffected()
-// 	}
+}
 
-// }
+func (itemModel ItemModel) Create(item *entities.Item) (int64, error) {
+	fmt.Println(*item)
+	result, err := itemModel.Db.Exec("INSERT INTO items(name, time, number1, ingredient1, number2, ingredient2, number3, ingredient3, result, machineType) VALUES (?,?,?,?,?,?,?,?,?,?)", item.Name, item.Time, item.Recipe[0].Number, item.Recipe[0].Item, item.Recipe[1].Number, item.Recipe[1].Item, item.Recipe[2].Number, item.Recipe[2].Item, item.Result, item.MachineType)
+	if err != nil {
+		return 0, err
+	} else {
+		return result.RowsAffected()
+	}
 
-// func (authorModel ItemModel) Create(item *entities.Item) error {
-
-// 	result, err := authorModel.Db.Exec("INSERT INTO author(name, email) VALUES (?,?)", item.Name, item.Email)
-// 	if err != nil {
-// 		return err
-// 	} else {
-// 		item.Id, _ = result.LastInsertId()
-// 		return nil
-// 	}
-
-// }
+}
 
 func (itemModel ItemModel) Find(name string) (entities.Item, error) {
 
@@ -63,11 +62,7 @@ func (itemModel ItemModel) Find(name string) (entities.Item, error) {
 			}
 			recipe := []entities.Ingredient{}
 			for i, number := range numbers {
-				if number != 0 {
-					recipe = append(recipe, entities.Ingredient{Number: number, Item: ingredients[i]})
-				} else {
-					break
-				}
+				recipe = append(recipe, entities.Ingredient{Number: number, Item: ingredients[i]})
 			}
 			item = entities.Item{Name: name, Time: time, Recipe: recipe, MachineType: machineType, Result: result}
 		}
@@ -97,11 +92,7 @@ func (itemModel ItemModel) FindAll() ([]entities.Item, error) {
 		}
 		recipe := []entities.Ingredient{}
 		for i, number := range numbers {
-			if number != 0 {
-				recipe = append(recipe, entities.Ingredient{Number: number, Item: ingredients[i]})
-			} else {
-				break
-			}
+			recipe = append(recipe, entities.Ingredient{Number: number, Item: ingredients[i]})
 		}
 		item := entities.Item{Name: name, Time: time, Recipe: recipe, MachineType: machineType, Result: result}
 

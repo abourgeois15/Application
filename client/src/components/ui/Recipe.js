@@ -15,7 +15,7 @@ const Recipe = ({ingredients}) => {
       Items Required: 
       {ingredients && ingredients.map((ingredient, index) => (
         <div data-cy="item" className="itemContainer" key={index}>
-          <p data-cy="name" className="content" onClick={() => {navigateToItem(ingredient.item)}}>{ingredient.number} {ingredient.item}</p>
+          {(ingredient.number != 0) && <p data-cy="name" className="content" onClick={() => {navigateToItem(ingredient.item)}}>{ingredient.number} {ingredient.item}</p>}
         </div>
       ))}
     </div>

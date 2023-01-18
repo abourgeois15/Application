@@ -7,7 +7,6 @@ const ItemList = ({items, value}) => {
   const navigate = useNavigate();
   const navigateToItem = (name) => {
     // 👇️ navigate to /
-    console.log(name)
     navigate("./" + name);
   };
   return items.map((item, index) => (

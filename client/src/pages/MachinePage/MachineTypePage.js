@@ -13,7 +13,7 @@ export const MachineTypePage = () => {
     navigate("/fullMachines");
   };
   const params = useParams()
-  const [state] = useApi(services.getMachineById, [], params.machine_type);
+  const {state: machines} = useApi(services.getMachineById, [], params.machine_type);
 
   return (
     <div data-cy="detail-page" style={{ textAlign: "center" }}>
@@ -21,7 +21,7 @@ export const MachineTypePage = () => {
       <button data-cy="gohome-button" className="buttonG buttonGG" onClick={navigateToFullMachines}>
         Go Back To Full Machine List
       </button>
-      <MachineList machines={state}/>
+      <MachineList machines={machines}/>
     </div>
   );
 };

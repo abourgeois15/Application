@@ -12,7 +12,7 @@ export const MachineListPage = () => {
     navigate("/");
   };
 
-  const [state] = useApi(services.getMachines, []);
+  const {state: machines} = useApi(services.getMachines, []);
 
   return (
     <div data-cy="detail-page" style={{ textAlign: "center" }}>
@@ -20,7 +20,7 @@ export const MachineListPage = () => {
       <button data-cy="gohome-button" className="buttonG buttonGG" onClick={navigateToHome}>
         Go Back To Home
       </button>
-      <MachineList machines={state}/>
+      <MachineList machines={machines}/>
     </div>
   );
 };

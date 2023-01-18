@@ -1,3 +1,6 @@
 export {HomePage} from './HomePage/HomePage'
 export {ItemListPage, ItemPage} from './ItemPage'
 export {MachineListPage, MachineTypePage, MachinePage} from './MachinePage'
+export {DeleteItemPage} from './DeletePage/DeleteItemPage'
+export {CreateItemPage} from './CreatePage/CreateItemPage'
+export {UpdateItemPage} from './UpdatePage/UpdateItemPage'
