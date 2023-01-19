@@ -19,8 +19,8 @@ export const CreateMachinePage = () => {
     event.preventDefault();
     machine.time = Number(machine.time)
     machine.recipe[0].number = Number(machine.recipe[0].number)
-    machine.recipe[1].number = Number(machine.recipe[0].number)
-    machine.recipe[2].number = Number(machine.recipe[0].number)
+    machine.recipe[1].number = Number(machine.recipe[1].number)
+    machine.recipe[2].number = Number(machine.recipe[2].number)
     machine.speed = Number(machine.speed)
     setPost(true)
   }

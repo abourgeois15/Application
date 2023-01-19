@@ -1,6 +1,8 @@
 /* eslint-disable no-unreachable */
 import React from "react";
 import "./item.css";
+import IngredientForm from "./IngredientForm";
+import SelectType from "./SelectType";
 
 const ItemForm = ({item, handleSubmit, handleChangeItem, handleChangeRecipe}) => {
   const typeOptions = ["Assembling", "Chemical", "Furnace", "Mining"]
@@ -17,25 +19,9 @@ const ItemForm = ({item, handleSubmit, handleChangeItem, handleChangeRecipe}) =>
       <div className="form-group">
         <label>Recipe:</label>
         <div className="form-recipe">
-          <label>Ingredient:</label>
-          <div className="form-ingredient">
-            <label>Number:</label>
-            <input type="number" name="number" id="0" onChange={handleChangeRecipe} value={item.recipe[0].number} />
-            <label>Item:</label>
-            <input type="text" name="item" id="0" onChange={handleChangeRecipe} value={item.recipe[0].item} />
-          </div>
-          <div className="form-ingredient">
-            <label>Number:</label>
-            <input type="number" name="number" id="1" onChange={handleChangeRecipe} value={item.recipe[1].number} />
-            <label>Item:</label>
-            <input type="text" name="item" id="1" onChange={handleChangeRecipe} value={item.recipe[1].item} />
-          </div>
-          <div className="form-ingredient">
-            <label>Number:</label>
-            <input type="number" name="number" id="2" onChange={handleChangeRecipe} value={item.recipe[2].number} />
-            <label>Item:</label>
-            <input type="text" name="item" id="2" onChange={handleChangeRecipe} value={item.recipe[2].item} />
-          </div>
+          <IngredientForm ingredient={item.recipe[0]} handleChange={handleChangeRecipe} id="0"/>
+          <IngredientForm ingredient={item.recipe[1]} handleChange={handleChangeRecipe} id="1"/>
+          <IngredientForm ingredient={item.recipe[2]} handleChange={handleChangeRecipe} id="2"/>
         </div>
       </div>
       <div className="form-group">
@@ -44,11 +30,7 @@ const ItemForm = ({item, handleSubmit, handleChangeItem, handleChangeRecipe}) =>
       </div>
       <div className="form-group">
         <label>Type Of Machine:</label>
-        <select name="machineType" value={item.machineType} onChange={handleChangeItem}>
-          {typeOptions.map((type, index) => (
-            <option value={type} key={index}>{type}</option>
-          ))}
-        </select>
+        <SelectType name="machineType" type={item.machineType} handleChange={handleChangeItem}/>
       </div>
       <input type="submit" />
     </form>
