@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
-import { HomePage, ItemListPage, ItemPage, MachineListPage, MachinePage, MachineTypePage, DeleteItemPage, CreateItemPage, UpdateItemPage } from './pages';
+import { HomePage, ItemListPage, ItemPage, MachineListPage, MachinePage, MachineTypePage, DeleteItemPage, CreateItemPage, UpdateItemPage, DeleteMachinePage, CreateMachinePage, UpdateMachinePage } from './pages';
 
 
 function App() {
@@ -18,10 +18,12 @@ function App() {
         <Route path="/fullMachines" element={<MachineListPage />} />
         <Route path="/fullMachines/name/:machine_name" element={<MachinePage />} />
         <Route path="/fullMachines/type/:machine_type" element={<MachineTypePage />} />
+        <Route path="/deleteMachine/:machine_name" element={<DeleteMachinePage />} />
+        <Route path="/createMachine" element={<CreateMachinePage />} />
+        <Route path="/updateMachine/:machine_name" element={<UpdateMachinePage />} />
       </Routes>
     </Router>
   )
-
 }
 
 export default App;

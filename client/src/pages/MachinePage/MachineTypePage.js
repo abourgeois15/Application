@@ -13,7 +13,7 @@ export const MachineTypePage = () => {
     navigate("/fullMachines");
   };
   const params = useParams()
-  const {state: machines} = useApi(services.getMachineById, [], params.machine_type);
+  const {state: machines} = useApi(services.getMachineByType, [], params.machine_type);
 
   return (
     <div data-cy="detail-page" style={{ textAlign: "center" }}>

@@ -4,16 +4,16 @@ import { useNavigate } from "react-router-dom";
 import "./item.css";
 import Recipe from "./Recipe";
 
-const Machine = ({machines}) => {
-  console.log(machines)
+const Machine = ({machine}) => {
+  console.log(machine)
   const navigate = useNavigate();
   const navigateToType = (type) => {
     // 👇️ navigate to /
     console.log(type)
     navigate("/fullMachines/type/" + type);
   };
-  return machines.map((machine, index) => (
-    <div data-cy="article-container" className="container" key={index}>
+  return (
+    <div data-cy="article-container" className="container">
       <div data-cy="item" className="itemContainer">
         <p data-cy="name" className="title">{machine.name}</p>
         <p data-cy="name" className="content" onClick={() => {navigateToType(machine.type)}}>Machine type: {machine.type}</p>
@@ -22,7 +22,7 @@ const Machine = ({machines}) => {
         <Recipe ingredients={machine.recipe}/>
       </div>
     </div>
-  ));
+  );
 };
 
 export default Machine;
