@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import { useApi } from "../../hooks/useApi";
 import { useNavigate } from "react-router-dom";
 import { services } from "../../services";
+import MachineForm from "../../components/ui/MachineForm";
 
 export const CreateMachinePage = () => {
   const navigate = useNavigate();
@@ -43,50 +44,8 @@ export const CreateMachinePage = () => {
   return (
     <div data-cy="detail-page" style={{ textAlign: "center" }}>
       <h1  data-cy="header" style={{ textAlign: "center"}}>Machine Creation</h1>
-        <button data-cy="A-goback-button" className="buttonA buttonAA" onClick={navigateToMachines}>Go Back To Machines Page</button>
-        <form className="form-vertical" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Name:</label>
-            <input type="text" name="name" onChange={handleChangeMachine} value={machine.name} />
-          </div>
-          <div className="form-group">
-            <label>Time:</label>
-            <input type="number" name="time" onChange={handleChangeMachine} value={machine.time} />
-          </div>
-          <div className="form-group">
-            <label>Recipe:</label>
-            <div className="form-recipe">
-              <label>Ingredient:</label>
-              <div className="form-ingredient">
-                <label>Number:</label>
-                <input type="number" name="number" id="0" onChange={handleChangeRecipe} value={machine.recipe[0].number} />
-                <label>Machine:</label>
-                <input type="text" name="item" id="0" onChange={handleChangeRecipe} value={machine.recipe[0].item} />
-              </div>
-              <div className="form-ingredient">
-                <label>Number:</label>
-                <input type="number" name="number" id="1" onChange={handleChangeRecipe} value={machine.recipe[1].number} />
-                <label>Machine:</label>
-                <input type="text" name="item" id="1" onChange={handleChangeRecipe} value={machine.recipe[1].item} />
-              </div>
-              <div className="form-ingredient">
-                <label>Number:</label>
-                <input type="number" name="number" id="2" onChange={handleChangeRecipe} value={machine.recipe[2].number} />
-                <label>Machine:</label>
-                <input type="text" name="item" id="2" onChange={handleChangeRecipe} value={machine.recipe[2].item} />
-              </div>
-            </div>
-          </div>
-          <div className="form-group">
-            <label>Type Of Machine:</label>
-            <input type="text" name="type" onChange={handleChangeMachine} value={machine.type} />
-          </div>
-          <div className="form-group">
-            <label>Speed:</label>
-            <input type="number" name="speed" onChange={handleChangeMachine} value={machine.speed} />
-          </div>
-          <input type="submit" />
-        </form>
+      <button data-cy="A-goback-button" className="buttonA buttonAA" onClick={navigateToMachines}>Go Back To Machines Page</button>
+      <MachineForm machine={machine} handleSubmit={handleSubmit} handleChangeMachine={handleChangeMachine} handleChangeRecipe={handleChangeRecipe}/>
     </div>
   );
 };

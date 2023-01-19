@@ -17,7 +17,7 @@ export const MachineListPage = () => {
     navigate("/createMachine");
   };
 
-  const {state: machines} = useApi(services.getMachines, []);
+  const {state: names} = useApi(services.getMachines, []);
 
   return (
     <div data-cy="detail-page" style={{ textAlign: "center" }}>
@@ -25,7 +25,7 @@ export const MachineListPage = () => {
       <button data-cy="gohome-button" className="buttonG buttonGG" onClick={navigateToHome}>Go Back To Home</button>
       <button data-cy="A-create-button" className="buttonA buttonAA" onClick={navigateToCreate}>Create New Machine</button>
 
-      <MachineList machines={machines}/>
+      <MachineList names={names}/>
     </div>
   );
 };

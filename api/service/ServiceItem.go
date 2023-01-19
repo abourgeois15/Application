@@ -101,12 +101,12 @@ func GetAllItems(c *gin.Context) {
 		itemModel := mysqloperations.ItemModel{
 			Db: db,
 		}
-		items, err := itemModel.FindAll()
+		names, err := itemModel.FindAll()
 
 		if err != nil {
 			fmt.Println(err)
 		}
-		c.IndentedJSON(http.StatusOK, items)
+		c.IndentedJSON(http.StatusOK, names)
 	}
 }
 

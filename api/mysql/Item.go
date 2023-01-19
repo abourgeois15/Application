@@ -68,37 +68,23 @@ func (itemModel ItemModel) Find(name string) (entities.Item, error) {
 		}
 		return item, nil
 	}
-
 }
 
-func (itemModel ItemModel) FindAll() ([]entities.Item, error) {
+func (itemModel ItemModel) FindAll() ([]string, error) {
 
-	rows, err := itemModel.Db.Query("SELECT * FROM items")
+	rows, err := itemModel.Db.Query("SELECT name FROM items")
 
 	if err != nil {
 		return nil, err
 	}
-	items := []entities.Item{}
+	names := []string{}
 	for rows.Next() {
 		var name string
-		var time float32
-		var numbers [3]int
-		var ingredients [3]string
-		var machineType string
-		var result int
-		err := rows.Scan(&name, &time, &numbers[0], &ingredients[0], &numbers[1], &ingredients[1], &numbers[2], &ingredients[2], &result, &machineType)
+		err := rows.Scan(&name)
 		if err != nil {
 			return nil, err
 		}
-		recipe := []entities.Ingredient{}
-		for i, number := range numbers {
-			recipe = append(recipe, entities.Ingredient{Number: number, Item: ingredients[i]})
-		}
-		item := entities.Item{Name: name, Time: time, Recipe: recipe, MachineType: machineType, Result: result}
-
-		items = append(items, item)
-
+		names = append(names, name)
 	}
-	return items, nil
-
+	return names, nil
 }

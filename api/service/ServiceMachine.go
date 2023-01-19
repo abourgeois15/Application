@@ -101,12 +101,12 @@ func GetAllMachines(c *gin.Context) {
 		machineModel := mysqloperations.MachineModel{
 			Db: db,
 		}
-		machines, err := machineModel.FindAll()
+		names, err := machineModel.FindAll()
 
 		if err != nil {
 			fmt.Println(err)
 		}
-		c.IndentedJSON(http.StatusOK, machines)
+		c.IndentedJSON(http.StatusOK, names)
 	}
 }
 

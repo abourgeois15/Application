@@ -18,8 +18,8 @@ export const ItemListPage = () => {
     navigate("/createItem");
   };
 
-  const {state: items} = useApi(services.getItems, []);
-  console.log(items)
+  const {state: names} = useApi(services.getItems, []);
+  console.log(names)
   const [value, setValue] = useState("");
 
   //handleChange function for search
@@ -33,7 +33,7 @@ export const ItemListPage = () => {
       <SearchBox handleChange={searchHandleChange} value={value} />
       <button data-cy="gohome-button" className="buttonG buttonGG" onClick={navigateToHome}>Go Back To Home</button>
       <button data-cy="A-create-button" className="buttonA buttonAA" onClick={navigateToCreate}>Create New Item</button>
-      <ItemList items={items} value={value} />
+      <ItemList names={names} value={value} />
     </div>
   );
 };
