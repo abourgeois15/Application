@@ -110,6 +110,24 @@ func GetAllMachines(c *gin.Context) {
 	}
 }
 
+func GetAllTypes(c *gin.Context) {
+	db, err := config.GetMySQLDB()
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		machineModel := mysqloperations.MachineModel{
+			Db: db,
+		}
+		types, err := machineModel.FindAllTypes()
+
+		if err != nil {
+			fmt.Println(err)
+		}
+		c.IndentedJSON(http.StatusOK, types)
+	}
+}
+
 func GetMachineByName(c *gin.Context) {
 	db, err := config.GetMySQLDB()
 	name := c.Param("machine_name")

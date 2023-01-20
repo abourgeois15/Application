@@ -1,8 +1,7 @@
 /* eslint-disable no-unreachable */
 import React from "react";
-import { useApi } from "../../hooks/useApi";
-import { services } from "../../services";
-import "./item.css";
+import { useApi } from "../../../hooks/useApi";
+import { services } from "../../../services";
 
 const SelectItem = ({value, handleChange, id}) => {
   const {state: names} = useApi(services.getItems, [])

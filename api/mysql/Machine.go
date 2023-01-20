@@ -127,3 +127,24 @@ func (machineModel MachineModel) FindAll() ([]string, error) {
 	return names, nil
 
 }
+
+func (machineModel MachineModel) FindAllTypes() ([]string, error) {
+
+	rows, err := machineModel.Db.Query("SELECT DISTINCT type FROM machines")
+
+	if err != nil {
+		return nil, err
+	}
+	types := []string{}
+	for rows.Next() {
+		var mtype string
+		err := rows.Scan(&mtype)
+		if err != nil {
+			return nil, err
+		}
+		types = append(types, mtype)
+
+	}
+	return types, nil
+
+}

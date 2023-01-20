@@ -3,7 +3,7 @@ import { useApi } from "../../hooks/useApi";
 import { useParams } from 'react-router-dom'
 import { services } from "../../services";
 import { useNavigate } from "react-router-dom";
-import MachineList from "../../components/ui/MachineList";
+import MachineList from "../../components/ui/lists/MachineList";
 
 export const MachineTypePage = () => {
   const navigate = useNavigate();

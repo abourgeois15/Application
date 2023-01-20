@@ -2,7 +2,7 @@ import React from "react";
 import { useApi } from "../../hooks/useApi";
 import { services } from "../../services";
 import { useNavigate } from "react-router-dom";
-import MachineList from "../../components/ui/MachineList";
+import MachineList from "../../components/ui/lists/MachineList";
 
 export const MachineListPage = () => {
   const navigate = useNavigate();

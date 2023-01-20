@@ -17,6 +17,7 @@ func HandleRequest() {
 	router.PUT("/item", service.UpdateItem)
 
 	router.GET("/machines", service.GetAllMachines)
+	router.GET("/machines/type", service.GetAllTypes)
 	router.GET("/machine/name/:machine_name", service.GetMachineByName)
 	router.GET("/machine/type/:machine_type", service.GetMachineByType)
 	router.DELETE("/machine/:machine_name", service.DeleteMachine)

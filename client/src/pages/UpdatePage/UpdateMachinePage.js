@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useApi } from "../../hooks/useApi";
 import { useNavigate } from "react-router-dom";
 import { services } from "../../services";
-import MachineForm from "../../components/ui/MachineForm";
+import MachineForm from "../../components/ui/forms/MachineForm";
 
 export const UpdateMachinePage = () => {
   const navigate = useNavigate();

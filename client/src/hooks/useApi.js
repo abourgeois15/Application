@@ -9,8 +9,6 @@ export const useApi = (callBack, initial, ...args) => {
     try {
       const res = await callBack(...args);
       setState(res);
-      console.log(res)
-      console.log(state)
     } catch (error) {
         handleError(error);
     }

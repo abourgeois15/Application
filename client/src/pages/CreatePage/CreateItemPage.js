@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { useApi } from "../../hooks/useApi";
 import { useNavigate } from "react-router-dom";
 import { services } from "../../services";
-import ItemForm from "../../components/ui/ItemForm";
+import ItemForm from "../../components/ui/forms/ItemForm";
 
 export const CreateItemPage = () => {
   const navigate = useNavigate();

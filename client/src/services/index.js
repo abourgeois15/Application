@@ -45,10 +45,18 @@ export const updateItem = async (item, post) => {
   }
 };
 
-
 export const getMachines = async () => {
 
   const url = `${BASE_URL}/machines`;
+  const response = await fetch(url);
+  if (response.ok) {
+    return response.json();
+  }
+};
+
+export const getTypes = async () => {
+
+  const url = `${BASE_URL}/machines/type`;
   const response = await fetch(url);
   if (response.ok) {
     return response.json();
@@ -107,6 +115,7 @@ export const services = {
     deleteItem,
     updateItem,
     getMachines,
+    getTypes,
     getMachineByName,
     getMachineByType,
     createMachine,

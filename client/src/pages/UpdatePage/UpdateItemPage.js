@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useApi } from "../../hooks/useApi";
 import { useNavigate } from "react-router-dom";
 import { services } from "../../services";
-import ItemForm from "../../components/ui/ItemForm";
+import ItemForm from "../../components/ui/forms/ItemForm";
 
 export const UpdateItemPage = () => {
   const navigate = useNavigate();

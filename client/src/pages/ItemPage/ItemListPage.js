@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useApi } from "../../hooks/useApi";
 import { services } from "../../services";
 import { useNavigate } from "react-router-dom";
-import ItemList from "../../components/ui/ItemList";
-import SearchBox from "../../components/ui/SearchBox";
+import ItemList from "../../components/ui/lists/ItemList";
+import SearchBox from "../../components/ui/selects/SearchBox";
 
 export const ItemListPage = () => {
   const navigate = useNavigate();

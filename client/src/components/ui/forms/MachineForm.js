@@ -1,11 +1,9 @@
 /* eslint-disable no-unreachable */
 import React from "react";
-import "./item.css";
-import IngredientForm from "./IngredientForm";
-import SelectType from "./SelectType";
+import SelectType from "../selects/SelectType";
+import RecipeForm from "./RecipeForm";
 
 const MachineForm = ({machine, handleSubmit, handleChangeMachine, handleChangeRecipe}) => {
-  const typeOptions = ["Assembling", "Chemical", "Furnace", "Mining"]
   return (
     <form className="form-vertical" onSubmit={handleSubmit}>
       <div className="form-group">
@@ -17,12 +15,7 @@ const MachineForm = ({machine, handleSubmit, handleChangeMachine, handleChangeRe
         <input type="number" name="time" onChange={handleChangeMachine} value={machine.time} />
       </div>
       <div className="form-group">
-        <label>Recipe:</label>
-        <div className="form-recipe">
-          <IngredientForm ingredient={machine.recipe[0]} handleChange={handleChangeRecipe} id="0"/>
-          <IngredientForm ingredient={machine.recipe[1]} handleChange={handleChangeRecipe} id="1"/>
-          <IngredientForm ingredient={machine.recipe[2]} handleChange={handleChangeRecipe} id="2"/>
-        </div>
+        <RecipeForm recipe={machine.recipe} handleChange={handleChangeRecipe}/>
       </div>
       <div className="form-group">
         <label>Type Of Machine:</label>

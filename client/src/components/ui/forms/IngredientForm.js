@@ -1,7 +1,6 @@
 /* eslint-disable no-unreachable */
 import React from "react";
-import "./item.css";
-import SelectItem from "./SelectItem";
+import SelectItem from "../selects/SelectItem";
 
 const IngredientForm = ({ingredient, handleChange, id}) => {
   return (
