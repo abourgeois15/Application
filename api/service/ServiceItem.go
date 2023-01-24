@@ -36,7 +36,7 @@ func CreateItem(c *gin.Context) {
 		if rows > 0 {
 			fmt.Println("done")
 		}
-		c.IndentedJSON(http.StatusOK, rows)
+		c.IndentedJSON(http.StatusCreated, rows)
 	}
 }
 

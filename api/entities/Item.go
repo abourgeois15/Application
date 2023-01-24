@@ -6,11 +6,11 @@ type Ingredient struct {
 }
 
 type Item struct {
-	Name        string       `json:"name"`
-	Recipe      []Ingredient `json:"recipe"`
-	Time        float32      `json:"time"`
-	Result      int          `json:"result"`
-	MachineType string       `json:"machineType"`
+	Name        string        `json:"name"`
+	Recipe      [3]Ingredient `json:"recipe"`
+	Time        float32       `json:"time"`
+	Result      int           `json:"result"`
+	MachineType string        `json:"machineType"`
 }
 
 type ItemList struct {
@@ -18,11 +18,11 @@ type ItemList struct {
 }
 
 type Machine struct {
-	Name   string       `json:"name"`
-	Type   string       `json:"type"`
-	Recipe []Ingredient `json:"recipe"`
-	Time   float32      `json:"time"`
-	Speed  float32      `json:"speed"`
+	Name   string        `json:"name"`
+	Type   string        `json:"type"`
+	Recipe [3]Ingredient `json:"recipe"`
+	Time   float32       `json:"time"`
+	Speed  float32       `json:"speed"`
 }
 
 type MachineList struct {

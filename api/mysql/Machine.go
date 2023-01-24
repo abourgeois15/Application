@@ -10,6 +10,24 @@ type MachineModel struct {
 	Db *sql.DB
 }
 
+func (machineModel MachineModel) CreateTable() (int64, error) {
+	result, err := machineModel.Db.Exec("CREATE TABLE `machines` (`name` varchar(50) NOT NULL,`type` varchar(50) NOT NULL,`number1` int DEFAULT '0',`ingredient1` varchar(50) DEFAULT '',`number2` int DEFAULT '0',`ingredient2` varchar(50) DEFAULT '',`number3` int DEFAULT '0',`ingredient3` varchar(50) DEFAULT '',`time` float DEFAULT '0',`speed` float NOT NULL,PRIMARY KEY (`name`))")
+	if err != nil {
+		return 0, err
+	} else {
+		return result.RowsAffected()
+	}
+}
+
+func (machineModel MachineModel) DeleteTable() (int64, error) {
+	result, err := machineModel.Db.Exec("DROP TABLE `machines`")
+	if err != nil {
+		return 0, err
+	} else {
+		return result.RowsAffected()
+	}
+}
+
 func (machineModel MachineModel) Delete(name string) (int64, error) {
 
 	result, err := machineModel.Db.Exec("DELETE FROM machines WHERE name=?", name)
@@ -44,7 +62,7 @@ func (machineModel MachineModel) Create(machine *entities.Machine) (int64, error
 
 func (machineModel MachineModel) FindName(name string) (entities.Machine, error) {
 
-	rows, err := machineModel.Db.Query("SELECT * FROM `machines` WHERE name=?", name)
+	rows, err := machineModel.Db.Query("SELECT * FROM machines WHERE name=?", name)
 	if err != nil {
 		return entities.Machine{}, err
 	} else {
@@ -60,13 +78,9 @@ func (machineModel MachineModel) FindName(name string) (entities.Machine, error)
 			if err != nil {
 				return entities.Machine{}, err
 			}
-			recipe := []entities.Ingredient{}
+			recipe := [3]entities.Ingredient{}
 			for i, number := range numbers {
-				if number != 0 {
-					recipe = append(recipe, entities.Ingredient{Number: number, Item: ingredients[i]})
-				} else {
-					break
-				}
+				recipe[i] = entities.Ingredient{Number: number, Item: ingredients[i]}
 			}
 			machine = entities.Machine{Name: name, Type: mtype, Recipe: recipe, Time: time, Speed: speed}
 		}
@@ -74,36 +88,22 @@ func (machineModel MachineModel) FindName(name string) (entities.Machine, error)
 	}
 }
 
-func (machineModel MachineModel) FindType(mtype string) ([]entities.Machine, error) {
+func (machineModel MachineModel) FindType(mtype string) ([]string, error) {
 
-	rows, err := machineModel.Db.Query("SELECT * FROM `machines` WHERE type=?", mtype)
+	rows, err := machineModel.Db.Query("SELECT name FROM machines WHERE type=?", mtype)
 	if err != nil {
 		return nil, err
 	} else {
-		machines := []entities.Machine{}
+		names := []string{}
 		for rows.Next() {
 			var name string
-			var mtype string
-			var numbers [3]int
-			var ingredients [3]string
-			var time float32
-			var speed float32
-			err := rows.Scan(&name, &mtype, &numbers[0], &ingredients[0], &numbers[1], &ingredients[1], &numbers[2], &ingredients[2], &time, &speed)
+			err := rows.Scan(&name)
 			if err != nil {
 				return nil, err
 			}
-			recipe := []entities.Ingredient{}
-			for i, number := range numbers {
-				if number != 0 {
-					recipe = append(recipe, entities.Ingredient{Number: number, Item: ingredients[i]})
-				} else {
-					break
-				}
-			}
-			machine := entities.Machine{Name: name, Type: mtype, Recipe: recipe, Time: time, Speed: speed}
-			machines = append(machines, machine)
+			names = append(names, name)
 		}
-		return machines, nil
+		return names, nil
 	}
 }
 
