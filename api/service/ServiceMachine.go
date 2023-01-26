@@ -13,6 +13,7 @@ import (
 func CreateMachine(c *gin.Context) {
 	db, _ := config.GetMySQLDB()
 	var createdMachine entities.Machine
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err := c.BindJSON(&createdMachine); err != nil {
 		fmt.Println(err)
@@ -43,6 +44,7 @@ func CreateMachine(c *gin.Context) {
 func UpdateMachine(c *gin.Context) {
 	db, _ := config.GetMySQLDB()
 	var createdMachine entities.Machine
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err := c.BindJSON(&createdMachine); err != nil {
 		return
@@ -72,6 +74,7 @@ func UpdateMachine(c *gin.Context) {
 func DeleteMachine(c *gin.Context) {
 	db, err := config.GetMySQLDB()
 	name := c.Param("machine_name")
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
 		fmt.Println(err)
@@ -94,6 +97,7 @@ func DeleteMachine(c *gin.Context) {
 
 func GetAllMachines(c *gin.Context) {
 	db, err := config.GetMySQLDB()
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
 		fmt.Println(err)
@@ -112,6 +116,7 @@ func GetAllMachines(c *gin.Context) {
 
 func GetAllTypes(c *gin.Context) {
 	db, err := config.GetMySQLDB()
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
 		fmt.Println(err)
@@ -131,6 +136,7 @@ func GetAllTypes(c *gin.Context) {
 func GetMachineByName(c *gin.Context) {
 	db, err := config.GetMySQLDB()
 	name := c.Param("machine_name")
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
 		fmt.Println(err)
@@ -150,6 +156,7 @@ func GetMachineByName(c *gin.Context) {
 func GetMachineByType(c *gin.Context) {
 	db, err := config.GetMySQLDB()
 	mtype := c.Param("machine_type")
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
 		fmt.Println(err)

@@ -11,10 +11,10 @@ const Recipe = ({ingredients}) => {
     navigate("/fullItems/" + item);
   };
   return (
-    <div data-cy="article-container" className="container">
+    <div data-cy="recipe-container" className="container">
       Items Required: 
       {ingredients && ingredients.map((ingredient, index) => (
-        <div data-cy="item" className="itemContainer" key={index}>
+        <div data-cy="ingredient" className="itemContainer" key={index}>
           {(ingredient.number !== 0) && <p data-cy="name" className="content" onClick={() => {navigateToItem(ingredient.item)}}>{ingredient.number} {ingredient.item}</p>}
         </div>
       ))}

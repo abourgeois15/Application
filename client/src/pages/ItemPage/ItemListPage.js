@@ -28,7 +28,7 @@ export const ItemListPage = () => {
   };
 
   return (
-    <div data-cy="detail-page" style={{ textAlign: "center" }}>
+    <div data-cy="item-list-page" style={{ textAlign: "center" }}>
       <h1  data-cy="header" style={{ textAlign: "center"}}>List of Items</h1>
       <SearchBox handleChange={searchHandleChange} value={value} />
       <button data-cy="gohome-button" className="buttonG buttonGG" onClick={navigateToHome}>Go Back To Home</button>

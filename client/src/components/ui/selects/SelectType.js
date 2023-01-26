@@ -6,7 +6,7 @@ import { services } from "../../../services";
 const SelectType = ({name, type, handleChange}) => {
   const {state: types} = useApi(services.getTypes, [])
   return (
-    <select name={name} value={type} onChange={handleChange}>
+    <select data-cy="select-type" name={name} value={type} onChange={handleChange}>
       <option value="" key={0}>{""}</option>
       {types.map((type, index) => (
         <option value={type} key={index+1}>{type}</option>

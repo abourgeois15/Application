@@ -14,7 +14,7 @@ export const DeleteItemPage = () => {
   useApi(services.deleteItem, [], params.item_name);
 
   return (
-    <div data-cy="detail-page" style={{ textAlign: "center" }}>
+    <div data-cy="delete-page" style={{ textAlign: "center" }}>
       <h1  data-cy="header" style={{ textAlign: "center"}}>Item {params.item_name} Deleted</h1>
         <button data-cy="A-goback-button" className="buttonA buttonAA" onClick={navigateToItems}>Go Back To Items Page</button>
     </div>

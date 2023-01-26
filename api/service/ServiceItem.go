@@ -13,6 +13,7 @@ import (
 func CreateItem(c *gin.Context) {
 	db, _ := config.GetMySQLDB()
 	var createdItem entities.Item
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err := c.BindJSON(&createdItem); err != nil {
 		fmt.Println(err)
@@ -43,6 +44,7 @@ func CreateItem(c *gin.Context) {
 func UpdateItem(c *gin.Context) {
 	db, _ := config.GetMySQLDB()
 	var createdItem entities.Item
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err := c.BindJSON(&createdItem); err != nil {
 		return
@@ -72,6 +74,7 @@ func UpdateItem(c *gin.Context) {
 func DeleteItem(c *gin.Context) {
 	db, err := config.GetMySQLDB()
 	name := c.Param("item_name")
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
 		fmt.Println(err)
@@ -94,6 +97,7 @@ func DeleteItem(c *gin.Context) {
 
 func GetAllItems(c *gin.Context) {
 	db, err := config.GetMySQLDB()
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
 		fmt.Println(err)
@@ -113,6 +117,7 @@ func GetAllItems(c *gin.Context) {
 func GetItemByName(c *gin.Context) {
 	db, err := config.GetMySQLDB()
 	name := c.Param("item_name")
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
 		fmt.Println(err)
