@@ -182,16 +182,16 @@ func TestMachineUpdate(t *testing.T) {
 	res := sqlmock.NewResult(0, 1)
 	machine := entities.Machine{}
 
-	mock.ExpectExec("UPDATE machines SET time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, type=?, speed=? WHERE name=?").
-		WithArgs(machine.Time, machine.Recipe[0].Number, machine.Recipe[0].Item, machine.Recipe[1].Number, machine.Recipe[1].Item, machine.Recipe[2].Number, machine.Recipe[2].Item, machine.Type, machine.Speed, machine.Name).
+	mock.ExpectExec("UPDATE machines SET name=?, time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, type=?, speed=? WHERE id=?").
+		WithArgs(machine.Name, machine.Time, machine.Recipe[0].Number, machine.Recipe[0].Item, machine.Recipe[1].Number, machine.Recipe[1].Item, machine.Recipe[2].Number, machine.Recipe[2].Item, machine.Type, machine.Speed, machine.Id).
 		WillReturnResult(res)
 
 	if _, err = machineModel.Update(machine); err != nil {
 		t.Errorf("error was not expected while deleting machine: %s", err)
 	}
 
-	mock.ExpectExec("UPDATE machines SET time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, type=?, speed=? WHERE name=?").
-		WithArgs(machine.Time, machine.Recipe[0].Number, machine.Recipe[0].Item, machine.Recipe[1].Number, machine.Recipe[1].Item, machine.Recipe[2].Number, machine.Recipe[2].Item, machine.Type, machine.Speed, machine.Name).
+	mock.ExpectExec("UPDATE machines SET name=?, time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, type=?, speed=? WHERE id=?").
+		WithArgs(machine.Name, machine.Time, machine.Recipe[0].Number, machine.Recipe[0].Item, machine.Recipe[1].Number, machine.Recipe[1].Item, machine.Recipe[2].Number, machine.Recipe[2].Item, machine.Type, machine.Speed, machine.Id).
 		WillReturnError(fmt.Errorf("some error"))
 
 	if _, err = machineModel.Update(machine); err == nil {

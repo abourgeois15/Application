@@ -54,6 +54,7 @@ func UpdateMachine(c *gin.Context) {
 		Db: db,
 	}
 	machine := entities.Machine{
+		Id:     createdMachine.Id,
 		Name:   createdMachine.Name,
 		Time:   createdMachine.Time,
 		Recipe: createdMachine.Recipe,

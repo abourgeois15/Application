@@ -42,7 +42,7 @@ export const CreateMachinePage = () => {
   };
 
   return (
-    <div data-cy="detail-page" style={{ textAlign: "center" }}>
+    <div data-cy="create-page" style={{ textAlign: "center" }}>
       <h1  data-cy="header" style={{ textAlign: "center"}}>Machine Creation</h1>
       <button data-cy="A-goback-button" className="buttonA buttonAA" onClick={navigateToMachines}>Go Back To Machines Page</button>
       <MachineForm machine={machine} handleSubmit={handleSubmit} handleChangeMachine={handleChangeMachine} handleChangeRecipe={handleChangeRecipe}/>

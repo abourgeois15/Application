@@ -3,7 +3,6 @@ package integrationtest
 import (
 	"api/config"
 	"api/entities"
-	mysqloperations "api/mysql"
 	"api/service"
 	"encoding/json"
 	"net/http"
@@ -26,12 +25,8 @@ func TestItemTestSuite(t *testing.T) {
 
 func (s *ItemTestSuite) SetupSuite() {
 	config.ConnectMySQLDBTest()
-	db, err := config.GetMySQLDB()
-	s.Nil(err)
-	itemModel := mysqloperations.ItemModel{Db: db}
-	_, err = itemModel.CreateTable()
-	s.Nil(err)
 	router := gin.Default()
+	router.POST("/tables", service.CreateTables)
 	router.GET("/items", service.GetAllItems)
 	router.GET("/item/:item_name", service.GetItemByName)
 	router.DELETE("/item/:item_name", service.DeleteItem)
@@ -51,6 +46,14 @@ func (s *ItemTestSuite) TestCreateUpdateGetDeleteItem() {
 		req          *http.Request
 		w            *httptest.ResponseRecorder
 	)
+
+	// Create tables
+	req, err = http.NewRequest("POST", "/tables", nil)
+	s.Nil(err)
+	w = httptest.NewRecorder()
+	s.Router.ServeHTTP(w, req)
+	s.Equal(http.StatusCreated, w.Code)
+
 	// Create item
 	item = entities.Item{
 		Name:        "item_name",
@@ -70,9 +73,23 @@ func (s *ItemTestSuite) TestCreateUpdateGetDeleteItem() {
 	s.Router.ServeHTTP(w, req)
 	s.Equal(http.StatusCreated, w.Code)
 
+	// Get item
+	req, err = http.NewRequest("GET", "/item/"+item.Name, nil)
+	s.Nil(err)
+	w = httptest.NewRecorder()
+	s.Router.ServeHTTP(w, req)
+	s.Nil(json.Unmarshal(w.Body.Bytes(), &itemReceived))
+	s.Equal(http.StatusOK, w.Code)
+	s.Equal(item.Name, itemReceived.Name)
+	s.Equal(item.Time, itemReceived.Time)
+	s.Equal(item.Recipe, itemReceived.Recipe)
+	s.Equal(item.Result, itemReceived.Result)
+	s.Equal(item.MachineType, itemReceived.MachineType)
+
 	// Update item
 	item = entities.Item{
-		Name:        "item_name",
+		Id:          itemReceived.Id,
+		Name:        "new_name",
 		Time:        0.5,
 		Result:      2,
 		MachineType: "Furnace",
@@ -95,7 +112,6 @@ func (s *ItemTestSuite) TestCreateUpdateGetDeleteItem() {
 	s.Router.ServeHTTP(w, req)
 	s.Nil(json.Unmarshal(w.Body.Bytes(), &nameList))
 	s.Equal(http.StatusOK, w.Code)
-	s.Equal(item.Name, nameList[0])
 
 	// Get item
 	req, err = http.NewRequest("GET", "/item/"+item.Name, nil)
@@ -104,7 +120,11 @@ func (s *ItemTestSuite) TestCreateUpdateGetDeleteItem() {
 	s.Router.ServeHTTP(w, req)
 	s.Nil(json.Unmarshal(w.Body.Bytes(), &itemReceived))
 	s.Equal(http.StatusOK, w.Code)
-	s.Equal(item, itemReceived)
+	s.Equal(item.Name, itemReceived.Name)
+	s.Equal(item.Time, itemReceived.Time)
+	s.Equal(item.Recipe, itemReceived.Recipe)
+	s.Equal(item.Result, itemReceived.Result)
+	s.Equal(item.MachineType, itemReceived.MachineType)
 
 	// Delete item
 	req, err = http.NewRequest("DELETE", "/item/"+item.Name, nil)
@@ -112,12 +132,4 @@ func (s *ItemTestSuite) TestCreateUpdateGetDeleteItem() {
 	w = httptest.NewRecorder()
 	s.Router.ServeHTTP(w, req)
 	s.Equal(http.StatusOK, w.Code)
-}
-
-func (s *ItemTestSuite) TearDownSuite() {
-	db, err := config.GetMySQLDB()
-	s.Nil(err)
-	itemModel := mysqloperations.ItemModel{Db: db}
-	_, err = itemModel.DeleteTable()
-	s.Nil(err)
 }

@@ -10,6 +10,8 @@ import (
 
 func HandleRequest() {
 	router := gin.Default()
+	router.POST("/tables", service.CreateTables)
+
 	router.GET("/items", service.GetAllItems)
 	router.GET("/item/:item_name", service.GetItemByName)
 	router.DELETE("/item/:item_name", service.DeleteItem)

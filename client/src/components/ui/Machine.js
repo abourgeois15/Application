@@ -13,12 +13,12 @@ const Machine = ({machine}) => {
     navigate("/fullMachines/type/" + type);
   };
   return (
-    <div data-cy="article-container" className="container">
-      <div data-cy="item" className="itemContainer">
+    <div data-cy="machine-container" className="container">
+      <div data-cy="machine" className="itemContainer">
         <p data-cy="name" className="title">{machine.name}</p>
-        <p data-cy="name" className="content" onClick={() => {navigateToType(machine.type)}}>Machine type: {machine.type}</p>
-        <p data-cy="name" className="content">Crafting speed: {machine.speed}</p>
-        <p data-cy="name" className="content">Crafting time: {machine.time}</p>
+        <p data-cy="type" className="content" onClick={() => {navigateToType(machine.type)}}>Machine type: {machine.type}</p>
+        <p data-cy="speed" className="content">Crafting speed: {machine.speed}</p>
+        <p data-cy="time" className="content">Crafting time: {machine.time}</p>
         <Recipe ingredients={machine.recipe}/>
       </div>
     </div>

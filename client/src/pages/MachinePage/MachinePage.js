@@ -25,7 +25,7 @@ export const MachinePage = () => {
   const {state: machine} = useApi(services.getMachineByName, [], params.machine_name);
 
   return (
-    <div data-cy="detail-page" style={{ textAlign: "center" }}>
+    <div data-cy="machine-page" style={{ textAlign: "center" }}>
       <h1  data-cy="header" style={{ textAlign: "center"}}>Machine</h1>
         <button data-cy="A-goback-button" className="buttonA buttonAA" onClick={navigateToMachines}>Go Back Machine Page</button>
         <button data-cy="A-delete-button" className="buttonA buttonAA" onClick={() => {navigateToDelete(params.machine_name)}}>Delete Machine</button>

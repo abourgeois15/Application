@@ -1,0 +1,20 @@
+{
+    "name": "Electric furnace",
+    "time": 5,
+    "recipe": [
+      {
+        "number": 5,
+        "item": "Advanced circuit"
+      },
+      {
+        "number": 10,
+        "item": "Steel plate"
+      },
+      {
+        "number": 10,
+        "item": "Stone brick"
+      }
+    ],
+    "speed": 2,
+    "type": "Furnace"
+  }

@@ -2,7 +2,7 @@
 /// <reference types="Cypress"/>
 describe("Create Item Component", () => {
     beforeEach(() => {
-        cy.intercept("GET", "http://localhost:8080/items", {fixture: "items.json",}).as("getItems")
+        cy.intercept("GET", "http://localhost:8080/items", {fixture: "items_1.json",}).as("getItems")
         cy.intercept("GET", "http://localhost:8080/machines/type", {fixture: "types.json",}).as("getTypes")
         cy.visit("http://localhost:3000/createItem")
     })
@@ -17,7 +17,6 @@ describe("Create Item Component", () => {
 
     it("AC2: Click on Back button and go to item list page", () => {
 
-        cy.intercept("GET", "http://localhost:8080/items", {fixture: "items.json",})
         cy.get('[data-cy="A-goback-button"]').click();
         cy.url().should("include", "/fullItems");
         cy.get('[data-cy="item-list-page"]').should("exist");

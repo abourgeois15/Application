@@ -14,7 +14,7 @@ export const DeleteMachinePage = () => {
   useApi(services.deleteMachine, [], params.machine_name);
 
   return (
-    <div data-cy="detail-page" style={{ textAlign: "center" }}>
+    <div data-cy="delete-page" style={{ textAlign: "center" }}>
       <h1  data-cy="header" style={{ textAlign: "center"}}>Machine {params.machine_name} Deleted</h1>
         <button data-cy="A-goback-button" className="buttonA buttonAA" onClick={navigateToMachines}>Go Back To Machines Page</button>
     </div>

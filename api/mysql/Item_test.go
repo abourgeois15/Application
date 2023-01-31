@@ -165,8 +165,8 @@ func TestItemUpdate(t *testing.T) {
 	res := sqlmock.NewResult(0, 1)
 	item := entities.Item{}
 
-	mock.ExpectExec("UPDATE items SET time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, result=?, machineType=? WHERE name=?").
-		WithArgs(item.Time, item.Recipe[0].Number, item.Recipe[0].Item, item.Recipe[1].Number, item.Recipe[1].Item, item.Recipe[2].Number, item.Recipe[2].Item, item.Result, item.MachineType, item.Name).
+	mock.ExpectExec("UPDATE items SET name=?, time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, result=?, machineType=? WHERE id=?").
+		WithArgs(item.Name, item.Time, item.Recipe[0].Number, item.Recipe[0].Item, item.Recipe[1].Number, item.Recipe[1].Item, item.Recipe[2].Number, item.Recipe[2].Item, item.Result, item.MachineType, item.Id).
 		WillReturnResult(res)
 
 	if _, err = itemModel.Update(item); err != nil {
@@ -177,8 +177,8 @@ func TestItemUpdate(t *testing.T) {
 		t.Errorf("there were unfulfilled expectations: %s", err)
 	}
 
-	mock.ExpectExec("UPDATE items SET time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, result=?, machineType=? WHERE name=?").
-		WithArgs(item.Time, item.Recipe[0].Number, item.Recipe[0].Item, item.Recipe[1].Number, item.Recipe[1].Item, item.Recipe[2].Number, item.Recipe[2].Item, item.Result, item.MachineType, item.Name).
+	mock.ExpectExec("UPDATE items SET name=?, time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, result=?, machineType=? WHERE id=?").
+		WithArgs(item.Name, item.Time, item.Recipe[0].Number, item.Recipe[0].Item, item.Recipe[1].Number, item.Recipe[1].Item, item.Recipe[2].Number, item.Recipe[2].Item, item.Result, item.MachineType, item.Id).
 		WillReturnError(fmt.Errorf("some error"))
 
 	if _, err = itemModel.Update(item); err == nil {

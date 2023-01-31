@@ -16,9 +16,9 @@ export const MachineTypePage = () => {
   const {state: names} = useApi(services.getMachineByType, [], params.machine_type);
 
   return (
-    <div data-cy="detail-page" style={{ textAlign: "center" }}>
+    <div data-cy="machine-type-page" style={{ textAlign: "center" }}>
       <h1  data-cy="header" style={{ textAlign: "center"}}>List Of {params.machine_type} Machines</h1>
-      <button data-cy="gohome-button" className="buttonG buttonGG" onClick={navigateToFullMachines}>
+      <button data-cy="A-goback-button" className="buttonG buttonGG" onClick={navigateToFullMachines}>
         Go Back To Full Machine List
       </button>
       <MachineList names={names}/>

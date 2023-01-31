@@ -11,9 +11,9 @@ const MachineList = ({names}) => {
     navigate("/fullMachines/name/" + name);
   };
   return names.map((name, index) => (
-    <div data-cy="item-container" className="container" key={index}>
-      <div data-cy="item" className="itemContainer">
-        <p data-cy="name" className="title" onClick={() => {navigateToMachine(name)}}>{name}</p>
+    <div data-cy="machine-container" className="container" key={index}>
+      <div data-cy="machine" className="itemContainer">
+        <p data-cy={name+"_cy"} className="title" onClick={() => {navigateToMachine(name)}}>{name}</p>
       </div>
     </div>
   ));

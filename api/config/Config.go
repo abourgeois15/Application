@@ -43,7 +43,7 @@ var (
 
 func ConnectMySQLDB() {
 
-	confContent, err := os.ReadFile("conf.yaml")
+	confContent, err := os.ReadFile("c:\\Users\\bor6rt\\go\\Application\\api\\conf.yaml")
 	if err != nil {
 		panic(err)
 	}
@@ -87,8 +87,7 @@ func ConnectMySQLDB() {
 }
 
 func ConnectMySQLDBTest() {
-
-	confContent, err := os.ReadFile("../conf.yaml")
+	confContent, err := os.ReadFile("c:\\Users\\bor6rt\\go\\Application\\api\\conf.yaml")
 	if err != nil {
 		panic(err)
 	}

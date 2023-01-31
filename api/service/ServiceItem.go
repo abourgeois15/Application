@@ -10,6 +10,44 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func CreateTables(c *gin.Context) {
+	db, _ := config.GetMySQLDB()
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
+	itemModel := mysqloperations.ItemModel{
+		Db: db,
+	}
+
+	rows, err := itemModel.CreateTables()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		if rows > 0 {
+			fmt.Println("done")
+		}
+		c.IndentedJSON(http.StatusCreated, rows)
+	}
+}
+
+func DeleteTableItem(c *gin.Context) {
+	db, _ := config.GetMySQLDB()
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
+	itemModel := mysqloperations.ItemModel{
+		Db: db,
+	}
+
+	rows, err := itemModel.DeleteTable()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		if rows > 0 {
+			fmt.Println("done")
+		}
+		c.IndentedJSON(http.StatusOK, rows)
+	}
+}
+
 func CreateItem(c *gin.Context) {
 	db, _ := config.GetMySQLDB()
 	var createdItem entities.Item
@@ -54,6 +92,7 @@ func UpdateItem(c *gin.Context) {
 		Db: db,
 	}
 	item := entities.Item{
+		Id:          createdItem.Id,
 		Name:        createdItem.Name,
 		Time:        createdItem.Time,
 		Recipe:      createdItem.Recipe,

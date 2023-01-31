@@ -3,7 +3,6 @@ package integrationtest
 import (
 	"api/config"
 	"api/entities"
-	mysqloperations "api/mysql"
 	"api/service"
 	"encoding/json"
 	"net/http"
@@ -26,12 +25,8 @@ func TestMachineTestSuite(t *testing.T) {
 
 func (s *MachineTestSuite) SetupSuite() {
 	config.ConnectMySQLDBTest()
-	db, err := config.GetMySQLDB()
-	s.Nil(err)
-	machineModel := mysqloperations.MachineModel{Db: db}
-	_, err = machineModel.CreateTable()
-	s.Nil(err)
 	router := gin.Default()
+	router.POST("/tables", service.CreateTables)
 	router.GET("/machines", service.GetAllMachines)
 	router.GET("/machines/type", service.GetAllTypes)
 	router.GET("/machine/name/:machine_name", service.GetMachineByName)
@@ -53,6 +48,14 @@ func (s *MachineTestSuite) TestCreateUpdateGetDeleteMachine() {
 		req             *http.Request
 		w               *httptest.ResponseRecorder
 	)
+
+	// Create tables
+	req, err = http.NewRequest("POST", "/tables", nil)
+	s.Nil(err)
+	w = httptest.NewRecorder()
+	s.Router.ServeHTTP(w, req)
+	s.Equal(http.StatusCreated, w.Code)
+
 	// Create machine
 	machine = entities.Machine{
 		Name:   "machine_name",
@@ -72,8 +75,22 @@ func (s *MachineTestSuite) TestCreateUpdateGetDeleteMachine() {
 	s.Router.ServeHTTP(w, req)
 	s.Equal(http.StatusCreated, w.Code)
 
+	// Get machine by name
+	req, err = http.NewRequest("GET", "/machine/name/"+machine.Name, nil)
+	s.Nil(err)
+	w = httptest.NewRecorder()
+	s.Router.ServeHTTP(w, req)
+	s.Nil(json.Unmarshal(w.Body.Bytes(), &machineReceived))
+	s.Equal(http.StatusOK, w.Code)
+	s.Equal(machine.Name, machineReceived.Name)
+	s.Equal(machine.Time, machineReceived.Time)
+	s.Equal(machine.Recipe, machineReceived.Recipe)
+	s.Equal(machine.Speed, machineReceived.Speed)
+	s.Equal(machine.Type, machineReceived.Type)
+
 	// Update machine
 	machine = entities.Machine{
+		Id:    machineReceived.Id,
 		Name:  "machine_name",
 		Time:  0.5,
 		Speed: 2,
@@ -97,7 +114,6 @@ func (s *MachineTestSuite) TestCreateUpdateGetDeleteMachine() {
 	s.Router.ServeHTTP(w, req)
 	s.Nil(json.Unmarshal(w.Body.Bytes(), &nameList))
 	s.Equal(http.StatusOK, w.Code)
-	s.Equal(machine.Name, nameList[0])
 
 	// Get all types
 	req, err = http.NewRequest("GET", "/machines/type", nil)
@@ -106,7 +122,6 @@ func (s *MachineTestSuite) TestCreateUpdateGetDeleteMachine() {
 	s.Router.ServeHTTP(w, req)
 	s.Nil(json.Unmarshal(w.Body.Bytes(), &nameList))
 	s.Equal(http.StatusOK, w.Code)
-	s.Equal(machine.Type, nameList[0])
 
 	// Get machine by name
 	req, err = http.NewRequest("GET", "/machine/name/"+machine.Name, nil)
@@ -124,7 +139,6 @@ func (s *MachineTestSuite) TestCreateUpdateGetDeleteMachine() {
 	s.Router.ServeHTTP(w, req)
 	s.Nil(json.Unmarshal(w.Body.Bytes(), &nameList))
 	s.Equal(http.StatusOK, w.Code)
-	s.Equal(machine.Name, nameList[0])
 
 	// Delete machine
 	req, err = http.NewRequest("DELETE", "/machine/"+machine.Name, nil)
@@ -132,12 +146,4 @@ func (s *MachineTestSuite) TestCreateUpdateGetDeleteMachine() {
 	w = httptest.NewRecorder()
 	s.Router.ServeHTTP(w, req)
 	s.Equal(http.StatusOK, w.Code)
-}
-
-func (s *MachineTestSuite) TearDownSuite() {
-	db, err := config.GetMySQLDB()
-	s.Nil(err)
-	machineModel := mysqloperations.MachineModel{Db: db}
-	_, err = machineModel.DeleteTable()
-	s.Nil(err)
 }

@@ -6,6 +6,7 @@ type Ingredient struct {
 }
 
 type Item struct {
+	Id          int           `json:"id"`
 	Name        string        `json:"name"`
 	Recipe      [3]Ingredient `json:"recipe"`
 	Time        float32       `json:"time"`
@@ -18,6 +19,7 @@ type ItemList struct {
 }
 
 type Machine struct {
+	Id     int           `json:"id"`
 	Name   string        `json:"name"`
 	Type   string        `json:"type"`
 	Recipe [3]Ingredient `json:"recipe"`

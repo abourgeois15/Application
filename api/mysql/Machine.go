@@ -11,7 +11,7 @@ type MachineModel struct {
 }
 
 func (machineModel MachineModel) CreateTable() (int64, error) {
-	result, err := machineModel.Db.Exec("CREATE TABLE `machines` (`name` varchar(50) NOT NULL,`type` varchar(50) NOT NULL,`number1` int DEFAULT '0',`ingredient1` varchar(50) DEFAULT '',`number2` int DEFAULT '0',`ingredient2` varchar(50) DEFAULT '',`number3` int DEFAULT '0',`ingredient3` varchar(50) DEFAULT '',`time` float DEFAULT '0',`speed` float NOT NULL,PRIMARY KEY (`name`))")
+	result, err := machineModel.Db.Exec("CREATE TABLE `machines` (`id` int NOT NULL AUTO_INCREMENT,`name` varchar(50) NOT NULL,`type` varchar(50) NOT NULL,`number1` int DEFAULT '0',`ingredient1` varchar(50) DEFAULT '',`number2` int DEFAULT '0',`ingredient2` varchar(50) DEFAULT '',`number3` int DEFAULT '0',`ingredient3` varchar(50) DEFAULT '',`time` float DEFAULT '0',`speed` float NOT NULL,PRIMARY KEY (`id`))")
 	if err != nil {
 		return 0, err
 	} else {
@@ -40,7 +40,7 @@ func (machineModel MachineModel) Delete(name string) (int64, error) {
 }
 
 func (machineModel MachineModel) Update(machine entities.Machine) (int64, error) {
-	result, err := machineModel.Db.Exec("UPDATE machines SET time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, type=?, speed=? WHERE name=?", machine.Time, machine.Recipe[0].Number, machine.Recipe[0].Item, machine.Recipe[1].Number, machine.Recipe[1].Item, machine.Recipe[2].Number, machine.Recipe[2].Item, machine.Type, machine.Speed, machine.Name)
+	result, err := machineModel.Db.Exec("UPDATE machines SET name=?, time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, type=?, speed=? WHERE id=?", machine.Name, machine.Time, machine.Recipe[0].Number, machine.Recipe[0].Item, machine.Recipe[1].Number, machine.Recipe[1].Item, machine.Recipe[2].Number, machine.Recipe[2].Item, machine.Type, machine.Speed, machine.Id)
 	if err != nil {
 		return 0, err
 	} else {
@@ -68,13 +68,14 @@ func (machineModel MachineModel) FindName(name string) (entities.Machine, error)
 	} else {
 		machine := entities.Machine{}
 		for rows.Next() {
+			var id int
 			var name string
 			var mtype string
 			var numbers [3]int
 			var ingredients [3]string
 			var time float32
 			var speed float32
-			err := rows.Scan(&name, &mtype, &numbers[0], &ingredients[0], &numbers[1], &ingredients[1], &numbers[2], &ingredients[2], &time, &speed)
+			err := rows.Scan(&id, &name, &mtype, &numbers[0], &ingredients[0], &numbers[1], &ingredients[1], &numbers[2], &ingredients[2], &time, &speed)
 			if err != nil {
 				return entities.Machine{}, err
 			}
@@ -82,7 +83,7 @@ func (machineModel MachineModel) FindName(name string) (entities.Machine, error)
 			for i, number := range numbers {
 				recipe[i] = entities.Ingredient{Number: number, Item: ingredients[i]}
 			}
-			machine = entities.Machine{Name: name, Type: mtype, Recipe: recipe, Time: time, Speed: speed}
+			machine = entities.Machine{Id: id, Name: name, Type: mtype, Recipe: recipe, Time: time, Speed: speed}
 		}
 		return machine, nil
 	}

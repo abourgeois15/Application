@@ -2,6 +2,7 @@
 import React from "react";
 import { useApi } from "../../../hooks/useApi";
 import { services } from "../../../services";
+import Select from 'react-select'
 
 const SelectType = ({name, type, handleChange}) => {
   const {state: types} = useApi(services.getTypes, [])

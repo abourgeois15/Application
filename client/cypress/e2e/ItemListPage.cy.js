@@ -2,7 +2,7 @@
 /// <reference types="Cypress"/>
 describe("Item List Component", () => {
     beforeEach(() => {
-        cy.intercept("GET", "http://localhost:8080/items", {fixture: "items.json",})
+        cy.intercept("GET", "http://localhost:8080/items", {fixture: "items_1.json",})
         cy.visit("http://localhost:3000/fullItems")
     })
 
@@ -37,7 +37,7 @@ describe("Item List Component", () => {
 
     it("AC4: Click on item and go to item page", () => {
 
-        cy.intercept("GET", "http://localhost:8080/item/*", {fixture: "item.json",})
+        cy.intercept("GET", "http://localhost:8080/item/*", {fixture: "item_1.json",})
         cy.get('[data-cy="Iron plate_cy"]').click();
         cy.url().should("include", "/fullItems/Iron%20plate"); 
         cy.get('[data-cy="item-page"]').should("exist");
