@@ -27,12 +27,12 @@ func HandleRequest() {
 	router.PUT("/machine", service.UpdateMachine)
 
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowOrigins = []string{"*"}
 	config.AllowMethods = []string{"GET", "POST", "DELETE", "PUT"}
 	config.AllowHeaders = []string{"Origin"}
 	router.Use(cors.New(config))
 
-	err := router.Run("localhost:8080")
+	err := router.Run(":8080")
 	if err != nil {
 		log.Fatal("Error when opening server: ", err)
 	}

@@ -1,11 +1,37 @@
 version: '3'
 services:
+  api:
+    container_name: api
+    build: ./api
+    ports: 
+      - 8080:8080
+    restart: on-failure
+    volumes:
+      - api:/usr/src/app/
+    depends_on:     
+      - db_mysql     
+    networks:
+      - default
+
+  client:
+    container_name: client
+    build: ./client
+    ports: 
+      - 3000:3000 
+    restart: on-failure
+
+    depends_on:     
+      - api     
+    networks:
+      - default
+
   db_mysql:
      build: ./database
      container_name: db_mysql
      ports: 
        - 3306:3306
      environment:
+       - MYSQL_DRIVER=mysql 
        - MYSQL_USER=admin 
        - MYSQL_DATABASE=newdockerdb
        - MYSQL_ROOT_PASSWORD=secret
@@ -19,5 +45,5 @@ services:
      command: --default-authentication-plugin=mysql_native_password  
   
 volumes:
+  api:
   database_mysql:                   
-

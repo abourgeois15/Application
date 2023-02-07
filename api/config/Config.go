@@ -7,8 +7,8 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/go-yaml/yaml"
 	log "github.com/sirupsen/logrus"
+	"gopkg.in/yaml.v2"
 )
 
 type Config struct {
@@ -43,7 +43,7 @@ var (
 
 func ConnectMySQLDB() {
 
-	confContent, err := os.ReadFile("c:\\Users\\bor6rt\\go\\Application\\api\\conf.yaml")
+	confContent, err := os.ReadFile("./conf.yaml")
 	if err != nil {
 		panic(err)
 	}
@@ -53,6 +53,7 @@ func ConnectMySQLDB() {
 		panic(err)
 	}
 
+	fmt.Println(conf)
 	dbDriver := conf.DB_Driver
 	dbUser := conf.DB_User
 	dbPass := conf.DB_Pass
@@ -62,16 +63,21 @@ func ConnectMySQLDB() {
 	fmt.Println("Connecting to database...")
 
 	d, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp("+dbHost+":"+dbPort+")/"+dbName)
+	if err != nil {
+		panic(err.Error())
+	}
 
 	limit := 15
 	// check that the database is reachable; try at least 3 times to connect
 	for i := 0; i <= limit; i++ {
+		log.Info("a")
 		err := d.Ping()
+		log.Info("b")
 		if err != nil && i == limit {
 			_ = fmt.Errorf("couldn't connect to database after %d tries: %s", i, err)
 			break
 		} else if err != nil {
-			log.Info("Couldn't connect to database, retrying in 1 second ...")
+			log.Info("Couldn't connect to database, retrying in 1 second ...", err)
 			time.Sleep(5 * time.Second)
 		} else {
 			log.Info("Successfully connected to database")
@@ -79,15 +85,11 @@ func ConnectMySQLDB() {
 		}
 	}
 
-	if err != nil {
-		panic(err.Error())
-	}
-
 	db = d
 }
 
 func ConnectMySQLDBTest() {
-	confContent, err := os.ReadFile("c:\\Users\\bor6rt\\go\\Application\\api\\conf.yaml")
+	confContent, err := os.ReadFile("./conf.yaml")
 	if err != nil {
 		panic(err)
 	}
@@ -106,6 +108,9 @@ func ConnectMySQLDBTest() {
 	fmt.Println("Connecting to database...")
 
 	d, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp("+dbHost+":"+dbPort+")/"+dbName)
+	if err != nil {
+		panic(err.Error())
+	}
 
 	limit := 15
 	// check that the database is reachable; try at least 3 times to connect
@@ -121,10 +126,6 @@ func ConnectMySQLDBTest() {
 			log.Info("Successfully connected to database")
 			break
 		}
-	}
-
-	if err != nil {
-		panic(err.Error())
 	}
 
 	db = d

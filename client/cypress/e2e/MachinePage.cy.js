@@ -56,5 +56,5 @@ describe("Machine Component", () => {
     cy.get('[data-cy="type"]').click();
     cy.url().should("include", "/fullMachines/type/Furnace");
     cy.get('[data-cy="machine-type-page"]').should("exist");
-});
+  });
 });
