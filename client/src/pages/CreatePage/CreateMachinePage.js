@@ -34,11 +34,20 @@ export const CreateMachinePage = () => {
 
   const handleChangeRecipe = (event) => {
     setPost(false);
-    let recipe = machine.recipe
-    recipe[Number(event.target.id)][event.target.name] = event.target.value;
+    const recipe = machine.recipe.map((ingredient, index) => {
+      if (index === Number(event.target.id)) {
+        return {
+          ...ingredient,
+          [event.target.name]: event.target.value
+        } 
+      }
+      else {
+        return ingredient;
+      }
+    })
     setMachine({
       ...machine,
-      ["recipe"]: recipe});
+      "recipe": recipe});
   };
 
   return (

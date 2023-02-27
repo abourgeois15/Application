@@ -17,6 +17,7 @@ func HandleRequest() {
 	router.DELETE("/item/:item_name", service.DeleteItem)
 	router.POST("/item", service.CreateItem)
 	router.PUT("/item", service.UpdateItem)
+	router.POST("/craftPlanner", service.GetCraftPlan)
 
 	router.GET("/machines", service.GetAllMachines)
 	router.GET("/machines/type", service.GetAllTypes)

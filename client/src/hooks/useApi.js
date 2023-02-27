@@ -8,6 +8,7 @@ export const useApi = (callBack, initial, ...args) => {
   const fetchData = async () => {
     try {
       const res = await callBack(...args);
+      console.log(res)
       setState(res);
     } catch (error) {
         handleError(error);

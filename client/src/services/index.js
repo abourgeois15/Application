@@ -45,6 +45,15 @@ export const updateItem = async (item, post) => {
   }
 };
 
+export const getCraftPlanner = async (plans) => {
+ 
+  const url = `${BASE_URL}/craftPlanner`;
+  const response = plans && await fetch(url, {method: "POST", body: JSON.stringify(plans)});
+  if (response.ok) {
+    return response.json();
+  }
+};
+
 export const getMachines = async () => {
 
   const url = `${BASE_URL}/machines`;
@@ -75,7 +84,7 @@ export const getMachineByName = async (name) => {
 export const getMachineByType = async (type) => {
  
   const url = `${BASE_URL}/machine/type/${type}`;
-  const response = await fetch(url);
+  const response = type && await fetch(url);
   if (response.ok) {
     return response.json();
   }
@@ -114,6 +123,7 @@ export const services = {
     createItem,
     deleteItem,
     updateItem,
+    getCraftPlanner,
     getMachines,
     getTypes,
     getMachineByName,

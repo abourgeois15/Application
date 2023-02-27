@@ -92,7 +92,7 @@ func (itemModel ItemModel) Find(name string) (entities.Item, error) {
 			var id int
 			var name string
 			var time float32
-			var numbers [3]int
+			var numbers [3]float32
 			var ingredients [3]string
 			var machineType string
 			var result int

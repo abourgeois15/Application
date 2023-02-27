@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
-import { HomePage, ItemListPage, ItemPage, MachineListPage, MachinePage, MachineTypePage, DeleteItemPage, CreateItemPage, UpdateItemPage, DeleteMachinePage, CreateMachinePage, UpdateMachinePage } from './pages';
+import { HomePage, ItemListPage, ItemPage, MachineListPage, MachinePage, MachineTypePage, DeleteItemPage, CreateItemPage, UpdateItemPage, DeleteMachinePage, CreateMachinePage, UpdateMachinePage, CraftPlannerPage } from './pages';
 
 
 function App() {
@@ -14,6 +14,7 @@ function App() {
         <Route path="/deleteItem/:item_name" element={<DeleteItemPage />} />
         <Route path="/createItem" element={<CreateItemPage />} />
         <Route path="/updateItem/:item_name" element={<UpdateItemPage />} />
+        <Route path="/craftPlanner/:item_name" element={<CraftPlannerPage />} />
 
         <Route path="/fullMachines" element={<MachineListPage />} />
         <Route path="/fullMachines/name/:machine_name" element={<MachinePage />} />

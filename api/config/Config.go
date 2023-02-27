@@ -53,7 +53,6 @@ func ConnectMySQLDB() {
 		panic(err)
 	}
 
-	fmt.Println(conf)
 	dbDriver := conf.DB_Driver
 	dbUser := conf.DB_User
 	dbPass := conf.DB_Pass
@@ -70,9 +69,7 @@ func ConnectMySQLDB() {
 	limit := 15
 	// check that the database is reachable; try at least 3 times to connect
 	for i := 0; i <= limit; i++ {
-		log.Info("a")
 		err := d.Ping()
-		log.Info("b")
 		if err != nil && i == limit {
 			_ = fmt.Errorf("couldn't connect to database after %d tries: %s", i, err)
 			break

@@ -34,12 +34,20 @@ export const CreateItemPage = () => {
 
   const handleChangeRecipe = (event) => {
     setPost(false);
-    let recipe = item.recipe
-    console.log(event.target)
-    recipe[Number(event.target.id)][event.target.name] = event.target.value;
+    const recipe = item.recipe.map((ingredient, index) => {
+      if (index === Number(event.target.id)) {
+        return {
+          ...ingredient,
+          [event.target.name]: event.target.value
+        } 
+      }
+      else {
+        return ingredient;
+      }
+    })
     setItem({
       ...item,
-      ["recipe"]: recipe});
+      "recipe": recipe});
   };
 
   return (

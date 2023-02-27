@@ -71,7 +71,7 @@ func (machineModel MachineModel) FindName(name string) (entities.Machine, error)
 			var id int
 			var name string
 			var mtype string
-			var numbers [3]int
+			var numbers [3]float32
 			var ingredients [3]string
 			var time float32
 			var speed float32
