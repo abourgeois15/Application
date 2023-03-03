@@ -10,7 +10,7 @@ export const CreateMachinePage = () => {
       // 👇️ navigate to /contacts
     navigate("/fullMachines");
   };
-  const [machine, setMachine] = useState({name: "", time: 0.0, recipe: [{number: 0, machine: ""}, {number: 0, machine: ""}, {number: 0, machine: ""}], type: "", speed: 0});
+  const [machine, setMachine] = useState({name: "", time: 0.0, recipe: [], type: "", speed: 0});
   const [post, setPost] = useState(false);
 
   useApi(services.createMachine, [], machine, post)
@@ -18,9 +18,12 @@ export const CreateMachinePage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     machine.time = Number(machine.time)
-    machine.recipe[0].number = Number(machine.recipe[0].number)
-    machine.recipe[1].number = Number(machine.recipe[1].number)
-    machine.recipe[2].number = Number(machine.recipe[2].number)
+    machine.recipe = machine.recipe.map((ingredient) => (
+      {
+        ...ingredient,
+        "number": Number(ingredient.number)
+      }
+    ))
     machine.speed = Number(machine.speed)
     setPost(true)
   }
@@ -50,11 +53,45 @@ export const CreateMachinePage = () => {
       "recipe": recipe});
   };
 
+  const addIngredient = () => {
+    setPost(false);
+    setMachine({
+      ...machine,
+      "recipe": [...machine.recipe, {id: -1, number: 0, item: ""}]
+    })
+  }
+
+  const deleteIngredient = (ingredient) => {
+    setPost(false);
+    if (ingredient.id === -1) {  
+      setMachine({
+        ...machine,
+        "recipe": machine.recipe.filter(_ingredient => _ingredient !== ingredient)
+      })
+    }
+    else {
+      const recipe = machine.recipe.map((_ingredient) => {
+        if (_ingredient === ingredient) {
+          return {
+            ..._ingredient,
+            "number": -1
+          } 
+        }
+        else {
+          return _ingredient;
+        }
+      })
+      setMachine({
+        ...machine,
+        "recipe": recipe});
+    }
+  }
+
   return (
     <div data-cy="create-page" style={{ textAlign: "center" }}>
       <h1  data-cy="header" style={{ textAlign: "center"}}>Machine Creation</h1>
       <button data-cy="A-goback-button" className="buttonA buttonAA" onClick={navigateToMachines}>Go Back To Machines Page</button>
-      <MachineForm machine={machine} handleSubmit={handleSubmit} handleChangeMachine={handleChangeMachine} handleChangeRecipe={handleChangeRecipe}/>
+      <MachineForm machine={machine} handleSubmit={handleSubmit} handleChangeMachine={handleChangeMachine} handleChangeRecipe={handleChangeRecipe} addIngredient={addIngredient} deleteIngredient={deleteIngredient}/>
     </div>
   );
 };

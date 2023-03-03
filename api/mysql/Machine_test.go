@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMachineFindAll(t *testing.T) {
@@ -17,21 +18,29 @@ func TestMachineFindAll(t *testing.T) {
 		Db: db,
 	}
 	defer db.Close()
-	rows := sqlmock.NewRows([]string{"name"})
 
-	mock.ExpectQuery("SELECT name FROM machines").
+	nameList := []string{"Assembling machine 1", "Electric furnace", "Electric mining drill"}
+	rows := sqlmock.NewRows([]string{"name"}).
+		AddRow(nameList[0]).
+		AddRow(nameList[1]).
+		AddRow(nameList[2])
+
+	mock.ExpectQuery("SELECT name FROM machines ORDER BY name ASC").
 		WillReturnRows(rows)
 
-	if _, err = machineModel.FindAll(); err != nil {
+	var nameList_resp []string
+	if nameList_resp, err = machineModel.FindAll(); err != nil {
 		t.Errorf("error was not expected while getting all machines: %s", err)
 	}
+	assert.Equal(t, nameList, nameList_resp)
 
-	mock.ExpectQuery("SELECT name FROM machines").
+	mock.ExpectQuery("SELECT name FROM machines ORDER BY name ASC").
 		WillReturnError(fmt.Errorf("some error"))
 
-	if _, err = machineModel.FindAll(); err == nil {
+	if nameList_resp, err = machineModel.FindAll(); err == nil {
 		t.Errorf("error was not expected while getting all machines: %s", err)
 	}
+	assert.Equal(t, []string{}, nameList_resp)
 
 	if err := mock.ExpectationsWereMet(); err != nil {
 		t.Errorf("there were unfulfilled expectations: %s", err)
@@ -47,24 +56,44 @@ func TestMachineFindName(t *testing.T) {
 		Db: db,
 	}
 	defer db.Close()
-	rows := sqlmock.NewRows([]string{"name", "type", "number1", "ingredient1", "number1", "ingredient1", "number1", "ingredient1", "time", "speed"})
-	name := "Advanced circuit"
+
+	machine := entities.Machine{Id: 0, Name: "Assembling machine 1", Time: 0.5, Speed: 0.5, Type: "Assembling"}
+	machineRows := sqlmock.NewRows([]string{"id", "name", "type", "time", "speed"}).
+		AddRow(machine.Id, machine.Name, machine.Type, machine.Time, machine.Speed)
+
+	recipe := []entities.Ingredient{
+		{Id: 0, Number: 3, Item: "Electronic circuit"},
+		{Id: 1, Number: 5, Item: "Iron gear wheel"},
+		{Id: 2, Number: 9, Item: "Iron plate"},
+	}
+	recipeRows := sqlmock.NewRows([]string{"ingrement_id", "number", "ingredient"}).
+		AddRow(recipe[0].Id, recipe[0].Number, recipe[0].Item).
+		AddRow(recipe[1].Id, recipe[1].Number, recipe[1].Item).
+		AddRow(recipe[2].Id, recipe[2].Number, recipe[2].Item)
+	machine.Recipe = recipe
 
 	mock.ExpectQuery("SELECT * FROM machines WHERE name=?").
-		WithArgs(name).
-		WillReturnRows(rows)
+		WithArgs(machine.Name).
+		WillReturnRows(machineRows)
 
-	if _, err = machineModel.FindName(name); err != nil {
+	mock.ExpectQuery("SELECT id, number, ingredient FROM recipes WHERE item=?").
+		WithArgs(machine.Name).
+		WillReturnRows(recipeRows)
+
+	var machine_resp entities.Machine
+	if machine_resp, err = machineModel.FindName(machine.Name); err != nil {
 		t.Errorf("error was not expected while getting machine: %s", err)
 	}
+	assert.Equal(t, machine, machine_resp)
 
 	mock.ExpectQuery("SELECT * FROM machines WHERE name=?").
-		WithArgs(name).
+		WithArgs(machine.Name).
 		WillReturnError(fmt.Errorf("some error"))
 
-	if _, err = machineModel.FindName(name); err == nil {
+	if machine_resp, err = machineModel.FindName(machine.Name); err == nil {
 		t.Errorf("error was expected while getting machine: %s", err)
 	}
+	assert.Equal(t, entities.Machine{}, machine_resp)
 
 	if err := mock.ExpectationsWereMet(); err != nil {
 		t.Errorf("there were unfulfilled expectations: %s", err)
@@ -80,24 +109,31 @@ func TestMachineFindType(t *testing.T) {
 		Db: db,
 	}
 	defer db.Close()
-	rows := sqlmock.NewRows([]string{"name", "type", "number1", "ingredient1", "number1", "ingredient1", "number1", "ingredient1", "time", "speed"})
-	mtype := "Assembling"
 
-	mock.ExpectQuery("SELECT name FROM machines WHERE type=?").
+	mtype := "Assembling"
+	nameList := []string{"Assembling machine 1", "Assembling machine 2"}
+	rows := sqlmock.NewRows([]string{"name"}).
+		AddRow(nameList[0]).
+		AddRow(nameList[1])
+
+	mock.ExpectQuery("SELECT name FROM machines WHERE type=? ORDER BY name ASC").
 		WithArgs(mtype).
 		WillReturnRows(rows)
 
-	if _, err = machineModel.FindType(mtype); err != nil {
+	var nameList_resp []string
+	if nameList_resp, err = machineModel.FindType(mtype); err != nil {
 		t.Errorf("error was not expected while getting machine: %s", err)
 	}
+	assert.Equal(t, nameList, nameList_resp)
 
-	mock.ExpectQuery("SELECT name FROM machines WHERE type=?").
+	mock.ExpectQuery("SELECT name FROM machines WHERE type=? ORDER BY name ASC").
 		WithArgs(mtype).
 		WillReturnError(fmt.Errorf("some error"))
 
-	if _, err = machineModel.FindType(mtype); err == nil {
+	if nameList_resp, err = machineModel.FindType(mtype); err == nil {
 		t.Errorf("error was expected while getting machine: %s", err)
 	}
+	assert.Equal(t, []string{}, nameList_resp)
 
 	if err := mock.ExpectationsWereMet(); err != nil {
 		t.Errorf("there were unfulfilled expectations: %s", err)
@@ -113,8 +149,9 @@ func TestMachineDelete(t *testing.T) {
 		Db: db,
 	}
 	defer db.Close()
+
 	res := sqlmock.NewResult(0, 1)
-	name := "Advanced circuit"
+	name := "Assembling machine 1"
 
 	mock.ExpectExec("DELETE FROM machines WHERE name=?").
 		WithArgs(name).
@@ -146,19 +183,38 @@ func TestMachineCreate(t *testing.T) {
 		Db: db,
 	}
 	defer db.Close()
-	res := sqlmock.NewResult(0, 1)
-	machine := entities.Machine{}
 
-	mock.ExpectExec("INSERT INTO machines(name, time, number1, ingredient1, number2, ingredient2, number3, ingredient3, type, speed) VALUES (?,?,?,?,?,?,?,?,?,?)").
-		WithArgs(machine.Name, machine.Time, machine.Recipe[0].Number, machine.Recipe[0].Item, machine.Recipe[1].Number, machine.Recipe[1].Item, machine.Recipe[2].Number, machine.Recipe[2].Item, machine.Type, machine.Speed).
+	machine := entities.Machine{Id: 0, Name: "Assembling machine 1", Time: 0.5, Type: "Assembling", Speed: 0.5}
+	res := sqlmock.NewResult(0, 1)
+
+	mock.ExpectExec("INSERT INTO machines(name, time, type, speed) VALUES (?,?,?,?)").
+		WithArgs(machine.Name, machine.Time, machine.Type, machine.Speed).
 		WillReturnResult(res)
+
+	recipe := []entities.Ingredient{
+		{Id: 0, Number: 3, Item: "Electronic circuit"},
+		{Id: 1, Number: 5, Item: "Iron gear wheel"},
+		{Id: 2, Number: 9, Item: "Iron plate"},
+	}
+	res = sqlmock.NewResult(0, 3)
+
+	for _, ingredient := range recipe {
+		mock.ExpectExec("INSERT INTO recipes(item, number, ingredient) VALUES (?,?,?)").
+			WithArgs(machine.Name, ingredient.Number, ingredient.Item).
+			WillReturnResult(res)
+	}
+	machine.Recipe = recipe
 
 	if _, err = machineModel.Create(&machine); err != nil {
 		t.Errorf("error was not expected while deleting machine: %s", err)
 	}
 
-	mock.ExpectExec("INSERT INTO machines(name, time, number1, ingredient1, number2, ingredient2, number3, ingredient3, type, speed) VALUES (?,?,?,?,?,?,?,?,?,?)").
-		WithArgs(machine.Name, machine.Time, machine.Recipe[0].Number, machine.Recipe[0].Item, machine.Recipe[1].Number, machine.Recipe[1].Item, machine.Recipe[2].Number, machine.Recipe[2].Item, machine.Type, machine.Speed).
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
+	}
+
+	mock.ExpectExec("INSERT INTO machines(name, time, type, speed) VALUES (?,?,?,?)").
+		WithArgs(machine.Name, machine.Time, machine.Type, machine.Speed).
 		WillReturnError(fmt.Errorf("some error"))
 
 	if _, err = machineModel.Create(&machine); err == nil {
@@ -179,19 +235,44 @@ func TestMachineUpdate(t *testing.T) {
 		Db: db,
 	}
 	defer db.Close()
-	res := sqlmock.NewResult(0, 1)
-	machine := entities.Machine{}
 
-	mock.ExpectExec("UPDATE machines SET name=?, time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, type=?, speed=? WHERE id=?").
-		WithArgs(machine.Name, machine.Time, machine.Recipe[0].Number, machine.Recipe[0].Item, machine.Recipe[1].Number, machine.Recipe[1].Item, machine.Recipe[2].Number, machine.Recipe[2].Item, machine.Type, machine.Speed, machine.Id).
+	machine := entities.Machine{Id: 0, Name: "Assembling machine 1", Time: 0.5, Type: "Assembling", Speed: 0.5}
+	res := sqlmock.NewResult(0, 1)
+
+	mock.ExpectExec("UPDATE machines SET name=?, time=?, type=?, speed=? WHERE id=?").
+		WithArgs(machine.Name, machine.Time, machine.Type, machine.Speed, machine.Id).
 		WillReturnResult(res)
+
+	recipe := []entities.Ingredient{
+		{Id: -1, Number: 3, Item: "Electronic circuit"},
+		{Id: 1, Number: 5, Item: "Iron gear wheel"},
+		{Id: 2, Number: -1, Item: "Iron plate"},
+	}
+	res = sqlmock.NewResult(0, 3)
+
+	mock.ExpectExec("INSERT INTO recipes(item, number, ingredient) VALUES (?,?,?)").
+		WithArgs(machine.Name, recipe[0].Number, recipe[0].Item).
+		WillReturnResult(res)
+
+	mock.ExpectExec("UPDATE recipes SET item=?, number=?, ingredient=? WHERE id=?").
+		WithArgs(machine.Name, recipe[1].Number, recipe[1].Item, recipe[1].Id).
+		WillReturnResult(res)
+
+	mock.ExpectExec("DELETE FROM recipes name WHERE id=?").
+		WithArgs(recipe[2].Id).
+		WillReturnResult(res)
+	machine.Recipe = recipe
 
 	if _, err = machineModel.Update(machine); err != nil {
 		t.Errorf("error was not expected while deleting machine: %s", err)
 	}
 
-	mock.ExpectExec("UPDATE machines SET name=?, time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, type=?, speed=? WHERE id=?").
-		WithArgs(machine.Name, machine.Time, machine.Recipe[0].Number, machine.Recipe[0].Item, machine.Recipe[1].Number, machine.Recipe[1].Item, machine.Recipe[2].Number, machine.Recipe[2].Item, machine.Type, machine.Speed, machine.Id).
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
+	}
+
+	mock.ExpectExec("UPDATE machines SET name=?, time=?, type=?, speed=? WHERE id=?").
+		WithArgs(machine.Name, machine.Time, machine.Type, machine.Speed, machine.Id).
 		WillReturnError(fmt.Errorf("some error"))
 
 	if _, err = machineModel.Update(machine); err == nil {

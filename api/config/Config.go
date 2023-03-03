@@ -86,7 +86,7 @@ func ConnectMySQLDB() {
 }
 
 func ConnectMySQLDBTest() {
-	confContent, err := os.ReadFile("./conf.yaml")
+	confContent, err := os.ReadFile("../conf.yaml")
 	if err != nil {
 		panic(err)
 	}

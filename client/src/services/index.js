@@ -37,7 +37,7 @@ export const deleteItem = async (name) => {
 };
 
 export const updateItem = async (item, post) => {
- 
+  console.log(post)
   const url = `${BASE_URL}/item`;
   const response = post && await fetch(url, {method: "PUT", body: JSON.stringify(item)});
   if (response.ok) {

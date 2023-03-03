@@ -40,24 +40,46 @@ func (machineModel MachineModel) Delete(name string) (int64, error) {
 }
 
 func (machineModel MachineModel) Update(machine entities.Machine) (int64, error) {
-	result, err := machineModel.Db.Exec("UPDATE machines SET name=?, time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, type=?, speed=? WHERE id=?", machine.Name, machine.Time, machine.Recipe[0].Number, machine.Recipe[0].Item, machine.Recipe[1].Number, machine.Recipe[1].Item, machine.Recipe[2].Number, machine.Recipe[2].Item, machine.Type, machine.Speed, machine.Id)
+	result, err := machineModel.Db.Exec("UPDATE machines SET name=?, time=?, type=?, speed=? WHERE id=?", machine.Name, machine.Time, machine.Type, machine.Speed, machine.Id)
+	fmt.Println(machine)
 	if err != nil {
 		return 0, err
-	} else {
-		return result.RowsAffected()
 	}
+	for _, ingredient := range machine.Recipe {
+		if ingredient.Id == -1 {
+			result, err = machineModel.Db.Exec("INSERT INTO recipes(item, number, ingredient) VALUES (?,?,?)", machine.Name, ingredient.Number, ingredient.Item)
+			if err != nil {
+				return 0, err
+			}
+		} else if ingredient.Number != -1 {
+			result, err = machineModel.Db.Exec("UPDATE recipes SET item=?, number=?, ingredient=? WHERE id=?", machine.Name, ingredient.Number, ingredient.Item, ingredient.Id)
+			if err != nil {
+				return 0, err
+			}
+		} else {
+			result, err = machineModel.Db.Exec("DELETE FROM recipes name WHERE id=?", ingredient.Id)
+			if err != nil {
+				return 0, err
+			}
+		}
+	}
+	return result.RowsAffected()
 
 }
 
 func (machineModel MachineModel) Create(machine *entities.Machine) (int64, error) {
 	fmt.Println(*machine)
-	result, err := machineModel.Db.Exec("INSERT INTO machines(name, time, number1, ingredient1, number2, ingredient2, number3, ingredient3, type, speed) VALUES (?,?,?,?,?,?,?,?,?,?)", machine.Name, machine.Time, machine.Recipe[0].Number, machine.Recipe[0].Item, machine.Recipe[1].Number, machine.Recipe[1].Item, machine.Recipe[2].Number, machine.Recipe[2].Item, machine.Type, machine.Speed)
+	result, err := machineModel.Db.Exec("INSERT INTO machines(name, time, type, speed) VALUES (?,?,?,?)", machine.Name, machine.Time, machine.Type, machine.Speed)
 	if err != nil {
 		return 0, err
-	} else {
-		return result.RowsAffected()
 	}
-
+	for _, ingredient := range machine.Recipe {
+		result, err = machineModel.Db.Exec("INSERT INTO recipes(item, number, ingredient) VALUES (?,?,?)", machine.Name, ingredient.Number, ingredient.Item)
+		if err != nil {
+			return 0, err
+		}
+	}
+	return result.RowsAffected()
 }
 
 func (machineModel MachineModel) FindName(name string) (entities.Machine, error) {
@@ -65,42 +87,43 @@ func (machineModel MachineModel) FindName(name string) (entities.Machine, error)
 	rows, err := machineModel.Db.Query("SELECT * FROM machines WHERE name=?", name)
 	if err != nil {
 		return entities.Machine{}, err
-	} else {
-		machine := entities.Machine{}
-		for rows.Next() {
-			var id int
-			var name string
-			var mtype string
-			var numbers [3]float32
-			var ingredients [3]string
-			var time float32
-			var speed float32
-			err := rows.Scan(&id, &name, &mtype, &numbers[0], &ingredients[0], &numbers[1], &ingredients[1], &numbers[2], &ingredients[2], &time, &speed)
-			if err != nil {
-				return entities.Machine{}, err
-			}
-			recipe := [3]entities.Ingredient{}
-			for i, number := range numbers {
-				recipe[i] = entities.Ingredient{Number: number, Item: ingredients[i]}
-			}
-			machine = entities.Machine{Id: id, Name: name, Type: mtype, Recipe: recipe, Time: time, Speed: speed}
-		}
-		return machine, nil
 	}
+	var machine entities.Machine
+	for rows.Next() {
+		err := rows.Scan(&machine.Id, &machine.Name, &machine.Type, &machine.Time, &machine.Speed)
+		if err != nil {
+			return entities.Machine{}, err
+		}
+	}
+	rows, err = machineModel.Db.Query("SELECT id, number, ingredient FROM recipes WHERE item=?", name)
+	if err != nil {
+		return entities.Machine{}, err
+	}
+	recipe := []entities.Ingredient{}
+	for rows.Next() {
+		var ingredient entities.Ingredient
+		err := rows.Scan(&ingredient.Id, &ingredient.Number, &ingredient.Item)
+		if err != nil {
+			return entities.Machine{}, err
+		}
+		recipe = append(recipe, ingredient)
+	}
+	machine.Recipe = recipe
+	return machine, nil
 }
 
 func (machineModel MachineModel) FindType(mtype string) ([]string, error) {
 
-	rows, err := machineModel.Db.Query("SELECT name FROM machines WHERE type=?", mtype)
+	rows, err := machineModel.Db.Query("SELECT name FROM machines WHERE type=? ORDER BY name ASC", mtype)
 	if err != nil {
-		return nil, err
+		return []string{}, err
 	} else {
 		names := []string{}
 		for rows.Next() {
 			var name string
 			err := rows.Scan(&name)
 			if err != nil {
-				return nil, err
+				return []string{}, err
 			}
 			names = append(names, name)
 		}
@@ -110,17 +133,17 @@ func (machineModel MachineModel) FindType(mtype string) ([]string, error) {
 
 func (machineModel MachineModel) FindAll() ([]string, error) {
 
-	rows, err := machineModel.Db.Query("SELECT name FROM machines")
+	rows, err := machineModel.Db.Query("SELECT name FROM machines ORDER BY name ASC")
 
 	if err != nil {
-		return nil, err
+		return []string{}, err
 	}
 	names := []string{}
 	for rows.Next() {
 		var name string
 		err := rows.Scan(&name)
 		if err != nil {
-			return nil, err
+			return []string{}, err
 		}
 		names = append(names, name)
 

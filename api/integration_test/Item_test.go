@@ -55,16 +55,12 @@ func (s *ItemTestSuite) TestCreateUpdateGetDeleteItem() {
 	s.Equal(http.StatusCreated, w.Code)
 
 	// Create item
-	item = entities.Item{
-		Name:        "item_name",
-		Time:        1,
-		Recipe:      [3]entities.Ingredient{},
-		Result:      1,
-		MachineType: "Assembling",
+	item = entities.Item{Id: 0, Name: "Advanced circuit", Time: 6, Result: 1, MachineType: "Assembling"}
+	item.Recipe = []entities.Ingredient{
+		{Id: 0, Number: 4, Item: "Copper cable"},
+		{Id: 1, Number: 2, Item: "Electronic circuit"},
+		{Id: 2, Number: 2, Item: "Plastic bar"},
 	}
-	item.Recipe[0] = entities.Ingredient{Number: 1, Item: "ingredient"}
-	item.Recipe[1] = entities.Ingredient{Number: 1, Item: "ingredient"}
-	item.Recipe[2] = entities.Ingredient{Number: 1, Item: "ingredient"}
 	itemJson, err = json.Marshal(item)
 	s.Nil(err)
 	req, err = http.NewRequest("POST", "/item", strings.NewReader(string(itemJson)))
@@ -87,16 +83,13 @@ func (s *ItemTestSuite) TestCreateUpdateGetDeleteItem() {
 	s.Equal(item.MachineType, itemReceived.MachineType)
 
 	// Update item
-	item = entities.Item{
-		Id:          itemReceived.Id,
-		Name:        "new_name",
-		Time:        0.5,
-		Result:      2,
-		MachineType: "Furnace",
+	item = entities.Item{Id: 0, Name: "Electronic circuit", Time: 0.5, Result: 1, MachineType: "Assembling"}
+	item.Recipe = []entities.Ingredient{
+		{Id: 0, Number: 3, Item: "Copper cable"},
+		{Id: 1, Number: -1, Item: "Electronic circuit"},
+		{Id: 2, Number: -1, Item: "Plastic bar"},
+		{Id: -1, Number: 1, Item: "Iron ore"},
 	}
-	item.Recipe[0] = entities.Ingredient{Number: 2, Item: "new_ingredient"}
-	item.Recipe[1] = entities.Ingredient{Number: 2, Item: "new_ingredient"}
-	item.Recipe[2] = entities.Ingredient{Number: 2, Item: "new_ingredient"}
 	itemJson, err = json.Marshal(item)
 	s.Nil(err)
 	req, err = http.NewRequest("PUT", "/item", strings.NewReader(string(itemJson)))

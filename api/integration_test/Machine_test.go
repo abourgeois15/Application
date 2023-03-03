@@ -60,7 +60,7 @@ func (s *MachineTestSuite) TestCreateUpdateGetDeleteMachine() {
 	machine = entities.Machine{
 		Name:   "machine_name",
 		Time:   1,
-		Recipe: [3]entities.Ingredient{},
+		Recipe: []entities.Ingredient{},
 		Speed:  1,
 		Type:   "Assembling",
 	}

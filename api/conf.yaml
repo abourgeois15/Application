@@ -3,8 +3,8 @@ MYSQL_PASSWORD: secret
 MYSQL_DRIVER: mysql
 MYSQL_DATABASE: newdockerdb
 MYSQL_ROOT_PASSWORD: secret
-MYSQL_HOST: host.docker.internal
-# MYSQL_HOST: localhost
+# MYSQL_HOST: host.docker.internal
+MYSQL_HOST: localhost
 MYSQL_PORT: 3306
 
 # Used during Integration tests

@@ -3,7 +3,7 @@ import React from "react";
 import SelectType from "../selects/SelectType";
 import RecipeForm from "./RecipeForm";
 
-const MachineForm = ({machine, handleSubmit, handleChangeMachine, handleChangeRecipe}) => {
+const MachineForm = ({machine, handleSubmit, handleChangeMachine, handleChangeRecipe, addIngredient, deleteIngredient}) => {
   return (
     <form data-cy="machine-form" className="form-vertical" onSubmit={handleSubmit}>
       <div className="form-group">
@@ -15,7 +15,7 @@ const MachineForm = ({machine, handleSubmit, handleChangeMachine, handleChangeRe
         <input data-cy="time" type="number" name="time" onChange={handleChangeMachine} value={machine.time} />
       </div>
       <div className="form-group">
-        <RecipeForm recipe={machine.recipe} handleChange={handleChangeRecipe}/>
+        <RecipeForm recipe={machine.recipe} handleChange={handleChangeRecipe} addIngredient={addIngredient} deleteIngredient={deleteIngredient}/>
       </div>
       <div className="form-group">
         <label>Type Of Machine:</label>

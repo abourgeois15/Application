@@ -1,17 +1,18 @@
 package entities
 
 type Ingredient struct {
+	Id     int     `json:"id"`
 	Number float32 `json:"number"`
 	Item   string  `json:"item"`
 }
 
 type Item struct {
-	Id          int           `json:"id"`
-	Name        string        `json:"name"`
-	Recipe      [3]Ingredient `json:"recipe"`
-	Time        float32       `json:"time"`
-	Result      int           `json:"result"`
-	MachineType string        `json:"machineType"`
+	Id          int          `json:"id"`
+	Name        string       `json:"name"`
+	Recipe      []Ingredient `json:"recipe"`
+	Time        float32      `json:"time"`
+	Result      int          `json:"result"`
+	MachineType string       `json:"machineType"`
 }
 
 type ItemList struct {
@@ -19,12 +20,12 @@ type ItemList struct {
 }
 
 type Machine struct {
-	Id     int           `json:"id"`
-	Name   string        `json:"name"`
-	Type   string        `json:"type"`
-	Recipe [3]Ingredient `json:"recipe"`
-	Time   float32       `json:"time"`
-	Speed  float32       `json:"speed"`
+	Id     int          `json:"id"`
+	Name   string       `json:"name"`
+	Type   string       `json:"type"`
+	Recipe []Ingredient `json:"recipe"`
+	Time   float32      `json:"time"`
+	Speed  float32      `json:"speed"`
 }
 
 type MachineList struct {

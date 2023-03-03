@@ -3,7 +3,7 @@ import React from "react";
 import SelectType from "../selects/SelectType";
 import RecipeForm from "./RecipeForm";
 
-const ItemForm = ({item, handleSubmit, handleChangeItem, handleChangeRecipe}) => {
+const ItemForm = ({item, handleSubmit, handleChangeItem, handleChangeRecipe, addIngredient, deleteIngredient}) => {
   return (
     <form data-cy="item-form" className="form-vertical" onSubmit={handleSubmit}>
       <div className="form-group">
@@ -15,7 +15,7 @@ const ItemForm = ({item, handleSubmit, handleChangeItem, handleChangeRecipe}) =>
         <input data-cy="time" type="number" name="time" onChange={handleChangeItem} value={item.time} />
       </div>
       <div className="form-group">
-        <RecipeForm recipe={item.recipe} handleChange={handleChangeRecipe}/>
+        <RecipeForm recipe={item.recipe} handleChange={handleChangeRecipe} addIngredient={addIngredient} deleteIngredient={deleteIngredient}/>
       </div>
       <div className="form-group">
         <label>Result:</label>

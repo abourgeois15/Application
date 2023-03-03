@@ -15,16 +15,18 @@ export const UpdateItemPage = () => {
   const {state: item, setState: setItem} = useApi(services.getItemByName, {name: "", time: 0.0, recipe: [{number: 0, item: ""}, {number: 0, item: ""}, {number: 0, item: ""}], result: 1, machineType: ""}, params.item_name);
   const [post, setPost] = useState(false);
 
-
   useApi(services.updateItem, [], item, post)
 
   const handleSubmit = (event) => {
     event.preventDefault();
     item.time = Number(item.time)
     item.result = Number(item.result)
-    item.recipe[0].number = Number(item.recipe[0].number)
-    item.recipe[1].number = Number(item.recipe[1].number)
-    item.recipe[2].number = Number(item.recipe[2].number)
+    item.recipe = item.recipe.map((ingredient) => (
+      {
+        ...ingredient,
+        "number": Number(ingredient.number)
+      }
+    ))
     setPost(true)
   }
 
@@ -52,12 +54,46 @@ export const UpdateItemPage = () => {
       ...item,
       "recipe": recipe});
   };
+
+  const addIngredient = () => {
+    setPost(false);
+    setItem({
+      ...item,
+      "recipe": [...item.recipe, {id: -1, number: 0, item: ""}]
+    })
+  }
+
+  const deleteIngredient = (ingredient) => {
+    setPost(false);
+    if (ingredient.id === -1) {  
+      setItem({
+        ...item,
+        "recipe": item.recipe.filter(_ingredient => _ingredient !== ingredient)
+      })
+    }
+    else {
+      const recipe = item.recipe.map((_ingredient) => {
+        if (_ingredient === ingredient) {
+          return {
+            ..._ingredient,
+            "number": -1
+          } 
+        }
+        else {
+          return _ingredient;
+        }
+      })
+      setItem({
+        ...item,
+        "recipe": recipe});
+    }
+  }
   
   return (
     <div data-cy="update-page" style={{ textAlign: "center" }}>
       <h1  data-cy="header" style={{ textAlign: "center"}}>Item Creation</h1>
       <button data-cy="A-goback-button" className="buttonA buttonAA" onClick={navigateToItems}>Go Back To Items Page</button>
-      <ItemForm item={item} handleSubmit={handleSubmit} handleChangeItem={handleChangeItem} handleChangeRecipe={handleChangeRecipe}/>
+      <ItemForm item={item} handleSubmit={handleSubmit} handleChangeItem={handleChangeItem} handleChangeRecipe={handleChangeRecipe} addIngredient={addIngredient} deleteIngredient={deleteIngredient}/>
     </div>
   );
 };

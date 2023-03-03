@@ -60,25 +60,46 @@ func (itemModel ItemModel) Delete(name string) (int64, error) {
 
 func (itemModel ItemModel) Update(item entities.Item) (int64, error) {
 
-	result, err := itemModel.Db.Exec("UPDATE items SET name=?, time=?, number1=?, ingredient1=?, number2=?, ingredient2=?, number3=?, ingredient3=?, result=?, machineType=? WHERE id=?", item.Name, item.Time, item.Recipe[0].Number, item.Recipe[0].Item, item.Recipe[1].Number, item.Recipe[1].Item, item.Recipe[2].Number, item.Recipe[2].Item, item.Result, item.MachineType, item.Id)
+	result, err := itemModel.Db.Exec("UPDATE items SET name=?, time=?, result=?, machineType=? WHERE id=?", item.Name, item.Time, item.Result, item.MachineType, item.Id)
 	fmt.Println(item)
 	if err != nil {
 		return 0, err
-	} else {
-		return result.RowsAffected()
 	}
+	for _, ingredient := range item.Recipe {
+		if ingredient.Id == -1 {
+			_, err = itemModel.Db.Exec("INSERT INTO recipes(item, number, ingredient) VALUES (?,?,?)", item.Name, ingredient.Number, ingredient.Item)
+			if err != nil {
+				return 0, err
+			}
+		} else if ingredient.Number != -1 {
+			_, err = itemModel.Db.Exec("UPDATE recipes SET item=?, number=?, ingredient=? WHERE id=?", item.Name, ingredient.Number, ingredient.Item, ingredient.Id)
+			if err != nil {
+				return 0, err
+			}
+		} else {
+			_, err = itemModel.Db.Exec("DELETE FROM recipes name WHERE id=?", ingredient.Id)
+			if err != nil {
+				return 0, err
+			}
+		}
+	}
+	return result.RowsAffected()
 
 }
 
 func (itemModel ItemModel) Create(item *entities.Item) (int64, error) {
 
-	result, err := itemModel.Db.Exec("INSERT INTO items(name, time, number1, ingredient1, number2, ingredient2, number3, ingredient3, result, machineType) VALUES (?,?,?,?,?,?,?,?,?,?)", item.Name, item.Time, item.Recipe[0].Number, item.Recipe[0].Item, item.Recipe[1].Number, item.Recipe[1].Item, item.Recipe[2].Number, item.Recipe[2].Item, item.Result, item.MachineType)
+	result, err := itemModel.Db.Exec("INSERT INTO items(name, time, result, machineType) VALUES (?,?,?,?)", item.Name, item.Time, item.Result, item.MachineType)
 	if err != nil {
 		return 0, err
-	} else {
-		return result.RowsAffected()
 	}
-
+	for _, ingredient := range item.Recipe {
+		_, err = itemModel.Db.Exec("INSERT INTO recipes(item, number, ingredient) VALUES (?,?,?)", item.Name, ingredient.Number, ingredient.Item)
+		if err != nil {
+			return 0, err
+		}
+	}
+	return result.RowsAffected()
 }
 
 func (itemModel ItemModel) Find(name string) (entities.Item, error) {
@@ -86,43 +107,45 @@ func (itemModel ItemModel) Find(name string) (entities.Item, error) {
 	rows, err := itemModel.Db.Query("SELECT * FROM items WHERE name=?", name)
 	if err != nil {
 		return entities.Item{}, err
-	} else {
-		item := entities.Item{}
-		for rows.Next() {
-			var id int
-			var name string
-			var time float32
-			var numbers [3]float32
-			var ingredients [3]string
-			var machineType string
-			var result int
-			err := rows.Scan(&id, &name, &time, &numbers[0], &ingredients[0], &numbers[1], &ingredients[1], &numbers[2], &ingredients[2], &result, &machineType)
-			if err != nil {
-				return entities.Item{}, err
-			}
-			recipe := [3]entities.Ingredient{}
-			for i, number := range numbers {
-				recipe[i] = entities.Ingredient{Number: number, Item: ingredients[i]}
-			}
-			item = entities.Item{Id: id, Name: name, Time: time, Recipe: recipe, MachineType: machineType, Result: result}
-		}
-		return item, nil
 	}
+	var item entities.Item
+	for rows.Next() {
+		err := rows.Scan(&item.Id, &item.Name, &item.Time, &item.Result, &item.MachineType)
+		if err != nil {
+			return entities.Item{}, err
+		}
+	}
+	rows, err = itemModel.Db.Query("SELECT id, number, ingredient FROM recipes WHERE item=?", name)
+	if err != nil {
+		return entities.Item{}, err
+	}
+	recipe := []entities.Ingredient{}
+	for rows.Next() {
+		var ingredient entities.Ingredient
+		err := rows.Scan(&ingredient.Id, &ingredient.Number, &ingredient.Item)
+		if err != nil {
+			return entities.Item{}, err
+		}
+		recipe = append(recipe, ingredient)
+	}
+	item.Recipe = recipe
+	return item, nil
+
 }
 
 func (itemModel ItemModel) FindAll() ([]string, error) {
 
-	rows, err := itemModel.Db.Query("SELECT name FROM items")
+	rows, err := itemModel.Db.Query("SELECT name FROM items  ORDER BY name ASC")
 
 	if err != nil {
-		return nil, err
+		return []string{}, err
 	}
 	names := []string{}
 	for rows.Next() {
 		var name string
 		err := rows.Scan(&name)
 		if err != nil {
-			return nil, err
+			return []string{}, err
 		}
 		names = append(names, name)
 	}
