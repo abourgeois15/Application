@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Description
+
+The client frontend is working at http://localhost:3000.
+
 ## Available Scripts
 
 In the project directory, you can run:
