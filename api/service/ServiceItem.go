@@ -6,6 +6,7 @@ import (
 	mysqloperations "api/mysql"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -102,14 +103,14 @@ func UpdateItem(c *gin.Context) {
 
 func DeleteItem(c *gin.Context) {
 	db, err := config.GetMySQLDB()
-	name := c.Param("item_name")
+	id, err := strconv.Atoi(c.Param("item_id"))
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
 		fmt.Println(err)
 	} else {
 		itemModel := mysqloperations.ItemModel{Db: db}
-		rows, err := itemModel.Delete(name)
+		rows, err := itemModel.Delete(id)
 		if err != nil {
 			fmt.Println(err)
 		} else {
@@ -130,25 +131,7 @@ func GetAllItems(c *gin.Context) {
 		fmt.Println(err)
 	} else {
 		itemModel := mysqloperations.ItemModel{Db: db}
-		names, err := itemModel.FindAll()
-
-		if err != nil {
-			fmt.Println(err)
-		}
-		c.IndentedJSON(http.StatusOK, names)
-	}
-}
-
-func GetItemByName(c *gin.Context) {
-	db, err := config.GetMySQLDB()
-	name := c.Param("item_name")
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		itemModel := mysqloperations.ItemModel{Db: db}
-		items, err := itemModel.Find(name)
+		items, err := itemModel.FindAll()
 
 		if err != nil {
 			fmt.Println(err)
@@ -157,70 +140,20 @@ func GetItemByName(c *gin.Context) {
 	}
 }
 
-func GetCraftPlan(c *gin.Context) {
+func GetItemByName(c *gin.Context) {
 	db, err := config.GetMySQLDB()
-	var craftPlans []entities.CraftPlan
+	id, err := strconv.Atoi(c.Param("item_id"))
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-
-	if err := c.BindJSON(&craftPlans); err != nil {
-		fmt.Println(err)
-		return
-	}
 
 	if err != nil {
 		fmt.Println(err)
-		return
-	}
-	for i, craftPlan := range craftPlans {
-		if craftPlan.Item != "" {
-			itemModel := mysqloperations.ItemModel{Db: db}
-			item, err := itemModel.Find(craftPlan.Item)
-			if err != nil {
-				fmt.Println(err)
-			}
-			machineModel := mysqloperations.MachineModel{Db: db}
-			machines, err := machineModel.FindType(item.MachineType)
-			if err != nil {
-				fmt.Println(err)
-			}
-			craftPlans[i].Machines = machines
-			if craftPlan.Machine == "" {
-				craftPlans[i].Machine = machines[0]
-			}
-			machine, err := machineModel.FindName(craftPlans[i].Machine)
-			if err != nil {
-				fmt.Println(err)
-			}
+	} else {
+		itemModel := mysqloperations.ItemModel{Db: db}
+		items, err := itemModel.Find(id)
 
-			if craftPlan.ParentId != -1 {
-				fmt.Println(craftPlan.ParentId)
-				for _, ingredient := range craftPlans[craftPlan.ParentId].Recipe {
-					if ingredient.Item == craftPlan.Item {
-						craftPlans[i].Number = ingredient.Number
-					}
-				}
-			}
-
-			var timeMult float32
-			switch craftPlan.Time {
-			case "s":
-				timeMult = 1
-			case "min":
-				timeMult = 60
-			case "h":
-				timeMult = 3600
-			default:
-				timeMult = 1
-			}
-			craftPlans[i].NumberMachine = (float32(craftPlans[i].Number) / timeMult * item.Time) / (machine.Speed * float32(item.Result))
-			craftPlans[i].Recipe[0].Number = (float32(craftPlans[i].Number) * float32(item.Recipe[0].Number)) / float32(item.Result)
-			craftPlans[i].Recipe[1].Number = (float32(craftPlans[i].Number) * float32(item.Recipe[1].Number)) / float32(item.Result)
-			craftPlans[i].Recipe[2].Number = (float32(craftPlans[i].Number) * float32(item.Recipe[2].Number)) / float32(item.Result)
-			craftPlans[i].Recipe[0].Item = item.Recipe[0].Item
-			craftPlans[i].Recipe[1].Item = item.Recipe[1].Item
-			craftPlans[i].Recipe[2].Item = item.Recipe[2].Item
+		if err != nil {
+			fmt.Println(err)
 		}
-		fmt.Println(craftPlans)
+		c.IndentedJSON(http.StatusOK, items)
 	}
-	c.IndentedJSON(http.StatusOK, craftPlans)
 }

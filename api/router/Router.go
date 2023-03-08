@@ -13,11 +13,10 @@ func HandleRequest() {
 	router.POST("/tables", service.CreateTables)
 
 	router.GET("/items", service.GetAllItems)
-	router.GET("/item/:item_name", service.GetItemByName)
-	router.DELETE("/item/:item_name", service.DeleteItem)
+	router.GET("/item/:item_id", service.GetItemByName)
+	router.DELETE("/item/:item_id", service.DeleteItem)
 	router.POST("/item", service.CreateItem)
-	router.PUT("/item", service.UpdateItem)
-	router.POST("/craftPlanner", service.GetCraftPlan)
+	router.PUT("/item/:item_id", service.UpdateItem)
 
 	router.GET("/machines", service.GetAllMachines)
 	router.GET("/machines/type", service.GetAllTypes)

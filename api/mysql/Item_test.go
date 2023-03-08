@@ -28,7 +28,7 @@ func TestItemFindAll(t *testing.T) {
 	mock.ExpectQuery("SELECT name FROM items  ORDER BY name ASC").
 		WillReturnRows(rows)
 
-	var nameList_resp []string
+	var nameList_resp []entities.Item
 	if nameList_resp, err = itemModel.FindAll(); err != nil {
 		t.Errorf("error was not expected while getting all items: %s", err)
 	}
@@ -85,7 +85,7 @@ func TestItemFind(t *testing.T) {
 		WillReturnRows(recipeRows)
 
 	var item_resp entities.Item
-	if item_resp, err = itemModel.Find(item.Name); err != nil {
+	if item_resp, err = itemModel.Find(item.Id); err != nil {
 		t.Errorf("error was not expected while getting item: %s", err)
 	}
 	assert.Equal(t, item, item_resp)
@@ -98,7 +98,7 @@ func TestItemFind(t *testing.T) {
 		WithArgs(item.Name).
 		WillReturnError(fmt.Errorf("some error"))
 
-	if item_resp, err = itemModel.Find(item.Name); err == nil {
+	if item_resp, err = itemModel.Find(item.Id); err == nil {
 		t.Errorf("error was expected while getting item: %s", err)
 	}
 	assert.Equal(t, entities.Item{}, item_resp)
@@ -118,13 +118,13 @@ func TestItemDelete(t *testing.T) {
 	}
 	defer db.Close()
 	res := sqlmock.NewResult(0, 1)
-	name := "Advanced circuit"
+	id := 1
 
-	mock.ExpectExec("DELETE FROM items WHERE name=?").
-		WithArgs(name).
+	mock.ExpectExec("DELETE FROM items WHERE id=?").
+		WithArgs(id).
 		WillReturnResult(res)
 
-	if _, err = itemModel.Delete(name); err != nil {
+	if _, err = itemModel.Delete(id); err != nil {
 		t.Errorf("error was not expected while deleting item: %s", err)
 	}
 
@@ -133,10 +133,10 @@ func TestItemDelete(t *testing.T) {
 	}
 
 	mock.ExpectExec("DELETE FROM items WHERE name=?").
-		WithArgs(name).
+		WithArgs(id).
 		WillReturnError(fmt.Errorf("some error"))
 
-	if _, err = itemModel.Delete(name); err == nil {
+	if _, err = itemModel.Delete(id); err == nil {
 		t.Errorf("error was not expected while deleting item: %s", err)
 	}
 

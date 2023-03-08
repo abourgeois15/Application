@@ -3,16 +3,16 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../item.css";
 
-const ItemList = ({names, value}) => {
+const ItemList = ({items, value}) => {
   const navigate = useNavigate();
-  const navigateToItem = (name) => {
+  const navigateToItem = (id) => {
     // 👇️ navigate to /
-    navigate("./" + name);
+    navigate("./" + id);
   };
-  return names.map((name, index) => (
+  return items.map((item, index) => (
     <div data-cy="item-container" className="container" key={index}>
       <div data-cy="item" className="itemContainer">
-        {(name.toLowerCase().includes(value.toLowerCase())) && <p data-cy={name+"_cy"} className="title" onClick={() => {navigateToItem(name)}}>{name}</p>}
+        {(item.name.toLowerCase().includes(value.toLowerCase())) && <p data-cy={item.name+"_cy"} className="title" onClick={() => {navigateToItem(item.id)}}>{item.name}</p>}
       </div>
     </div>
   ));

@@ -9,9 +9,9 @@ export const getItems = async () => {
   }
 };
 
-export const getItemByName = async (name) => {
+export const getItemById = async (id) => {
  
-  const url = `${BASE_URL}/item/${name}`;
+  const url = `${BASE_URL}/item/${id}`;
   const response = await fetch(url);
   if (response.ok) {
     return response.json();
@@ -38,7 +38,7 @@ export const deleteItem = async (name) => {
 
 export const updateItem = async (item, post) => {
   console.log(post)
-  const url = `${BASE_URL}/item`;
+  const url = `${BASE_URL}/item/${item.id}`;
   const response = post && await fetch(url, {method: "PUT", body: JSON.stringify(item)});
   if (response.ok) {
     return response.json();
@@ -119,7 +119,7 @@ export const updateMachine = async (machine, post) => {
 
 export const services = {
     getItems,
-    getItemByName,
+    getItemById,
     createItem,
     deleteItem,
     updateItem,
