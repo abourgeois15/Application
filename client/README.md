@@ -6,6 +6,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 The client frontend is working at http://localhost:3000.
 
+Here is a diagram explaining the architecture of the frontend. 
+
+![Frontend Diagram](Frontend_Diagram.png)
+
 ## Available Scripts
 
 In the project directory, you can run:
