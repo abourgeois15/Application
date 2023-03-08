@@ -48,9 +48,9 @@ func (itemModel ItemModel) DeleteTable() (int64, error) {
 	}
 }
 
-func (itemModel ItemModel) Delete(name string) (int64, error) {
+func (itemModel ItemModel) Delete(id int) (int64, error) {
 
-	result, err := itemModel.Db.Exec("DELETE FROM items WHERE name=?", name)
+	result, err := itemModel.Db.Exec("DELETE FROM items WHERE id=?", id)
 	if err != nil {
 		return 0, err
 	} else {
@@ -67,12 +67,12 @@ func (itemModel ItemModel) Update(item entities.Item) (int64, error) {
 	}
 	for _, ingredient := range item.Recipe {
 		if ingredient.Id == -1 {
-			_, err = itemModel.Db.Exec("INSERT INTO recipes(item, number, ingredient) VALUES (?,?,?)", item.Name, ingredient.Number, ingredient.Item)
+			_, err = itemModel.Db.Exec("INSERT INTO recipes(itemId, number, ingredientId) VALUES (?,?,(SELECT id FROM items WHERE name=?))", item.Id, ingredient.Number, ingredient.Item)
 			if err != nil {
 				return 0, err
 			}
 		} else if ingredient.Number != -1 {
-			_, err = itemModel.Db.Exec("UPDATE recipes SET item=?, number=?, ingredient=? WHERE id=?", item.Name, ingredient.Number, ingredient.Item, ingredient.Id)
+			_, err = itemModel.Db.Exec("UPDATE recipes SET itemId=?, number=?, ingredientId=(SELECT id FROM items WHERE name=?) WHERE id=?", item.Id, ingredient.Number, ingredient.Item, ingredient.Id)
 			if err != nil {
 				return 0, err
 			}
@@ -94,7 +94,7 @@ func (itemModel ItemModel) Create(item *entities.Item) (int64, error) {
 		return 0, err
 	}
 	for _, ingredient := range item.Recipe {
-		_, err = itemModel.Db.Exec("INSERT INTO recipes(item, number, ingredient) VALUES (?,?,?)", item.Name, ingredient.Number, ingredient.Item)
+		_, err = itemModel.Db.Exec("INSERT INTO recipes(item, number, ingredient) VALUES (?,?,(SELECT id FROM items WHERE name=?))", item.Id, ingredient.Number, ingredient.Item)
 		if err != nil {
 			return 0, err
 		}
@@ -102,9 +102,9 @@ func (itemModel ItemModel) Create(item *entities.Item) (int64, error) {
 	return result.RowsAffected()
 }
 
-func (itemModel ItemModel) Find(name string) (entities.Item, error) {
+func (itemModel ItemModel) Find(id int) (entities.Item, error) {
 
-	rows, err := itemModel.Db.Query("SELECT * FROM items WHERE name=?", name)
+	rows, err := itemModel.Db.Query("SELECT * FROM items WHERE id=?", id)
 	if err != nil {
 		return entities.Item{}, err
 	}
@@ -115,7 +115,7 @@ func (itemModel ItemModel) Find(name string) (entities.Item, error) {
 			return entities.Item{}, err
 		}
 	}
-	rows, err = itemModel.Db.Query("SELECT id, number, ingredient FROM recipes WHERE item=?", name)
+	rows, err = itemModel.Db.Query("SELECT recipes.id, recipes.number, items.name FROM recipes INNER JOIN items ON recipes.itemId=items.id WHERE recipes.itemId=?", id)
 	if err != nil {
 		return entities.Item{}, err
 	}
@@ -133,21 +133,21 @@ func (itemModel ItemModel) Find(name string) (entities.Item, error) {
 
 }
 
-func (itemModel ItemModel) FindAll() ([]string, error) {
+func (itemModel ItemModel) FindAll() ([]entities.Item, error) {
 
-	rows, err := itemModel.Db.Query("SELECT name FROM items  ORDER BY name ASC")
+	rows, err := itemModel.Db.Query("SELECT id, name FROM items  ORDER BY name ASC")
 
 	if err != nil {
-		return []string{}, err
+		return []entities.Item{}, err
 	}
-	names := []string{}
+	items := []entities.Item{}
 	for rows.Next() {
-		var name string
-		err := rows.Scan(&name)
+		var item entities.Item
+		err := rows.Scan(&item.Id, &item.Name)
 		if err != nil {
-			return []string{}, err
+			return []entities.Item{}, err
 		}
-		names = append(names, name)
+		items = append(items, item)
 	}
-	return names, nil
+	return items, nil
 }

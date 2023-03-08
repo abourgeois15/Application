@@ -12,7 +12,7 @@ export const UpdateItemPage = () => {
     navigate("/fullItems");
   };
   const params = useParams()
-  const {state: item, setState: setItem} = useApi(services.getItemByName, {name: "", time: 0.0, recipe: [{number: 0, item: ""}, {number: 0, item: ""}, {number: 0, item: ""}], result: 1, machineType: ""}, params.item_name);
+  const {state: item, setState: setItem} = useApi(services.getItemById, {name: "", time: 0.0, recipe: [{number: 0, item: ""}, {number: 0, item: ""}, {number: 0, item: ""}], result: 1, machineType: ""}, params.item_id);
   const [post, setPost] = useState(false);
 
   useApi(services.updateItem, [], item, post)

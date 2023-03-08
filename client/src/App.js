@@ -10,11 +10,10 @@ function App() {
         <Route path="/" element={<HomePage />} />
 
         <Route path="/fullItems" element={<ItemListPage />} />
-        <Route path="/fullItems/:item_name" element={<ItemPage />} />
-        <Route path="/deleteItem/:item_name" element={<DeleteItemPage />} />
+        <Route path="/fullItems/:item_id" element={<ItemPage />} />
+        <Route path="/deleteItem/:item_id" element={<DeleteItemPage />} />
         <Route path="/createItem" element={<CreateItemPage />} />
-        <Route path="/updateItem/:item_name" element={<UpdateItemPage />} />
-        <Route path="/craftPlanner/:item_name" element={<CraftPlannerPage />} />
+        <Route path="/updateItem/:item_id" element={<UpdateItemPage />} />
 
         <Route path="/fullMachines" element={<MachineListPage />} />
         <Route path="/fullMachines/name/:machine_name" element={<MachinePage />} />

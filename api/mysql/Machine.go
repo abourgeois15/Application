@@ -3,7 +3,6 @@ package mysqloperations
 import (
 	"api/entities"
 	"database/sql"
-	"fmt"
 )
 
 type MachineModel struct {
@@ -41,18 +40,17 @@ func (machineModel MachineModel) Delete(name string) (int64, error) {
 
 func (machineModel MachineModel) Update(machine entities.Machine) (int64, error) {
 	result, err := machineModel.Db.Exec("UPDATE machines SET name=?, time=?, type=?, speed=? WHERE id=?", machine.Name, machine.Time, machine.Type, machine.Speed, machine.Id)
-	fmt.Println(machine)
 	if err != nil {
 		return 0, err
 	}
 	for _, ingredient := range machine.Recipe {
 		if ingredient.Id == -1 {
-			result, err = machineModel.Db.Exec("INSERT INTO recipes(item, number, ingredient) VALUES (?,?,?)", machine.Name, ingredient.Number, ingredient.Item)
+			result, err = machineModel.Db.Exec("INSERT INTO recipes(itemId, number, ingredientId) VALUES ((SELECT id FROM items WHERE name=?),?,(SELECT id FROM items WHERE name=?))", machine.Name, ingredient.Number, ingredient.Item)
 			if err != nil {
 				return 0, err
 			}
 		} else if ingredient.Number != -1 {
-			result, err = machineModel.Db.Exec("UPDATE recipes SET item=?, number=?, ingredient=? WHERE id=?", machine.Name, ingredient.Number, ingredient.Item, ingredient.Id)
+			result, err = machineModel.Db.Exec("UPDATE recipes SET itemId=(SELECT id FROM items WHERE name=?), number=?, ingredientId=(SELECT id FROM items WHERE name=?) WHERE id=?", machine.Name, ingredient.Number, ingredient.Item, ingredient.Id)
 			if err != nil {
 				return 0, err
 			}
@@ -68,13 +66,16 @@ func (machineModel MachineModel) Update(machine entities.Machine) (int64, error)
 }
 
 func (machineModel MachineModel) Create(machine *entities.Machine) (int64, error) {
-	fmt.Println(*machine)
 	result, err := machineModel.Db.Exec("INSERT INTO machines(name, time, type, speed) VALUES (?,?,?,?)", machine.Name, machine.Time, machine.Type, machine.Speed)
 	if err != nil {
 		return 0, err
 	}
+	result, err = machineModel.Db.Exec("INSERT INTO items(name, time, result, machineType) VALUES (?,?,?,?)", machine.Name, machine.Time, 1, machine.Type)
+	if err != nil {
+		return 0, err
+	}
 	for _, ingredient := range machine.Recipe {
-		result, err = machineModel.Db.Exec("INSERT INTO recipes(item, number, ingredient) VALUES (?,?,?)", machine.Name, ingredient.Number, ingredient.Item)
+		result, err = machineModel.Db.Exec("INSERT INTO recipes(itemId, number, ingredientId) VALUES ((SELECT id FROM items WHERE name=?),?,(SELECT id FROM items WHERE name=?))", machine.Name, ingredient.Number, ingredient.Item)
 		if err != nil {
 			return 0, err
 		}
