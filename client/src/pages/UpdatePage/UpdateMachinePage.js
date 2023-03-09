@@ -12,7 +12,7 @@ export const UpdateMachinePage = () => {
     navigate("/fullMachines");
   };
   const params = useParams()
-  const {state: machine, setState: setMachine} = useApi(services.getMachineByName, {name: "", time: 0.0, recipe: [{number: 0, machine: ""}, {number: 0, machine: ""}, {number: 0, machine: ""}], type: 1, speed: ""}, params.machine_name);
+  const {state: machine, setState: setMachine} = useApi(services.getMachineById, {name: "", time: 0.0, recipe: [{number: 0, machine: ""}, {number: 0, machine: ""}, {number: 0, machine: ""}], type: 1, speed: ""}, params.machine_id);
   const [post, setPost] = useState(false);
 
   useApi(services.updateMachine, [], machine, post)

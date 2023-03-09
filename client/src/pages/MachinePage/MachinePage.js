@@ -12,17 +12,17 @@ export const MachinePage = () => {
     navigate("/fullMachines");
   };
 
-  const navigateToDelete = (name) => {
+  const navigateToDelete = (id) => {
     // 👇️ navigate to /contacts
-  navigate("/deleteMachine/" + name);
+  navigate("/deleteMachine/" + id);
   };
 
-  const navigateToUpdate = (name) => {
+  const navigateToUpdate = (id) => {
     // 👇️ navigate to /contacts
-    navigate("/updateMachine/" + name);
+    navigate("/updateMachine/" + id);
   };
   const params = useParams()
-  const {state: machine} = useApi(services.getMachineByName, [], params.machine_name);
+  const {state: machine} = useApi(services.getMachineById, [], params.machine_id);
 
   return (
     <div data-cy="machine-page" style={{ textAlign: "center" }}>

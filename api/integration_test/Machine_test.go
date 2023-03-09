@@ -29,7 +29,7 @@ func (s *MachineTestSuite) SetupSuite() {
 	router.POST("/tables", service.CreateTables)
 	router.GET("/machines", service.GetAllMachines)
 	router.GET("/machines/type", service.GetAllTypes)
-	router.GET("/machine/name/:machine_name", service.GetMachineByName)
+	router.GET("/machine/name/:machine_name", service.GetMachineByID)
 	router.GET("/machine/type/:machine_type", service.GetMachineByType)
 	router.DELETE("/machine/:machine_name", service.DeleteMachine)
 	router.POST("/machine", service.CreateMachine)

@@ -27,15 +27,14 @@ func (machineModel MachineModel) DeleteTable() (int64, error) {
 	}
 }
 
-func (machineModel MachineModel) Delete(name string) (int64, error) {
+func (machineModel MachineModel) Delete(id int) (int64, error) {
 
-	result, err := machineModel.Db.Exec("DELETE FROM machines WHERE name=?", name)
+	result, err := machineModel.Db.Exec("DELETE FROM machines WHERE id=?", id)
 	if err != nil {
 		return 0, err
 	} else {
 		return result.RowsAffected()
 	}
-
 }
 
 func (machineModel MachineModel) Update(machine entities.Machine) (int64, error) {
@@ -83,9 +82,9 @@ func (machineModel MachineModel) Create(machine *entities.Machine) (int64, error
 	return result.RowsAffected()
 }
 
-func (machineModel MachineModel) FindName(name string) (entities.Machine, error) {
+func (machineModel MachineModel) FindId(id int) (entities.Machine, error) {
 
-	rows, err := machineModel.Db.Query("SELECT * FROM machines WHERE name=?", name)
+	rows, err := machineModel.Db.Query("SELECT * FROM machines WHERE id=?", id)
 	if err != nil {
 		return entities.Machine{}, err
 	}
@@ -96,7 +95,7 @@ func (machineModel MachineModel) FindName(name string) (entities.Machine, error)
 			return entities.Machine{}, err
 		}
 	}
-	rows, err = machineModel.Db.Query("SELECT id, number, ingredient FROM recipes WHERE item=?", name)
+	rows, err = machineModel.Db.Query("SELECT recipes.id, recipes.number, items.name FROM recipes INNER JOIN items ON recipes.ingredientId=items.id WHERE recipes.itemId=(SELECT id FROM items WHERE name=?)", machine.Name)
 	if err != nil {
 		return entities.Machine{}, err
 	}
@@ -113,43 +112,43 @@ func (machineModel MachineModel) FindName(name string) (entities.Machine, error)
 	return machine, nil
 }
 
-func (machineModel MachineModel) FindType(mtype string) ([]string, error) {
+func (machineModel MachineModel) FindType(mtype string) ([]entities.Machine, error) {
 
-	rows, err := machineModel.Db.Query("SELECT name FROM machines WHERE type=? ORDER BY name ASC", mtype)
+	rows, err := machineModel.Db.Query("SELECT id, name FROM machines WHERE type=? ORDER BY name ASC", mtype)
 	if err != nil {
-		return []string{}, err
+		return []entities.Machine{}, err
 	} else {
-		names := []string{}
+		machines := []entities.Machine{}
 		for rows.Next() {
-			var name string
-			err := rows.Scan(&name)
+			var machine entities.Machine
+			err := rows.Scan(&machine.Id, &machine.Name)
 			if err != nil {
-				return []string{}, err
+				return []entities.Machine{}, err
 			}
-			names = append(names, name)
+			machines = append(machines, machine)
 		}
-		return names, nil
+		return machines, nil
 	}
 }
 
-func (machineModel MachineModel) FindAll() ([]string, error) {
+func (machineModel MachineModel) FindAll() ([]entities.Machine, error) {
 
-	rows, err := machineModel.Db.Query("SELECT name FROM machines ORDER BY name ASC")
+	rows, err := machineModel.Db.Query("SELECT id, name FROM machines ORDER BY name ASC")
 
 	if err != nil {
-		return []string{}, err
+		return []entities.Machine{}, err
 	}
-	names := []string{}
+	machines := []entities.Machine{}
 	for rows.Next() {
-		var name string
-		err := rows.Scan(&name)
+		var machine entities.Machine
+		err := rows.Scan(&machine.Id, &machine.Name)
 		if err != nil {
-			return []string{}, err
+			return []entities.Machine{}, err
 		}
-		names = append(names, name)
+		machines = append(machines, machine)
 
 	}
-	return names, nil
+	return machines, nil
 
 }
 

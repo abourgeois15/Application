@@ -11,7 +11,7 @@ export const DeleteMachinePage = () => {
     navigate("/fullMachines");
     };
   const params = useParams()
-  useApi(services.deleteMachine, [], params.machine_name);
+  useApi(services.deleteMachine, [], params.machine_id);
 
   return (
     <div data-cy="delete-page" style={{ textAlign: "center" }}>

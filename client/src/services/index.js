@@ -72,9 +72,9 @@ export const getTypes = async () => {
   }
 };
 
-export const getMachineByName = async (name) => {
+export const getMachineById = async (id) => {
  
-  const url = `${BASE_URL}/machine/name/${name}`;
+  const url = `${BASE_URL}/machine/id/${id}`;
   const response = await fetch(url);
   if (response.ok) {
     return response.json();
@@ -99,9 +99,9 @@ export const createMachine = async (machine, post) => {
   }
 };
 
-export const deleteMachine = async (name) => {
+export const deleteMachine = async (id) => {
  
-  const url = `${BASE_URL}/machine/${name}`;
+  const url = `${BASE_URL}/machine/${id}`;
   const response = await fetch(url, {method: "DELETE"});
   if (response.ok) {
     return response.json();
@@ -110,7 +110,7 @@ export const deleteMachine = async (name) => {
 
 export const updateMachine = async (machine, post) => {
  
-  const url = `${BASE_URL}/machine`;
+  const url = `${BASE_URL}/machine/${machine.id}`;
   const response = post && await fetch(url, {method: "PUT", body: JSON.stringify(machine)});
   if (response.ok) {
     return response.json();
@@ -126,7 +126,7 @@ export const services = {
     getCraftPlanner,
     getMachines,
     getTypes,
-    getMachineByName,
+    getMachineById,
     getMachineByType,
     createMachine,
     deleteMachine,

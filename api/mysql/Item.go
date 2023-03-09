@@ -115,7 +115,7 @@ func (itemModel ItemModel) Find(id int) (entities.Item, error) {
 			return entities.Item{}, err
 		}
 	}
-	rows, err = itemModel.Db.Query("SELECT recipes.id, recipes.number, items.name FROM recipes INNER JOIN items ON recipes.itemId=items.id WHERE recipes.itemId=?", id)
+	rows, err = itemModel.Db.Query("SELECT recipes.id, recipes.number, items.name FROM recipes INNER JOIN items ON recipes.ingredientId=items.id WHERE recipes.itemId=?", id)
 	if err != nil {
 		return entities.Item{}, err
 	}

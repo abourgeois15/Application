@@ -11,7 +11,7 @@ export const DeleteItemPage = () => {
     navigate("/fullItems");
     };
   const params = useParams()
-  useApi(services.deleteItem, [], params.item_name);
+  useApi(services.deleteItem, [], params.item_id);
 
   return (
     <div data-cy="delete-page" style={{ textAlign: "center" }}>

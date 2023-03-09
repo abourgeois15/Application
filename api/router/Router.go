@@ -20,11 +20,11 @@ func HandleRequest() {
 
 	router.GET("/machines", service.GetAllMachines)
 	router.GET("/machines/type", service.GetAllTypes)
-	router.GET("/machine/name/:machine_name", service.GetMachineByName)
+	router.GET("/machine/id/:machine_id", service.GetMachineByID)
 	router.GET("/machine/type/:machine_type", service.GetMachineByType)
-	router.DELETE("/machine/:machine_name", service.DeleteMachine)
+	router.DELETE("/machine/:machine_id", service.DeleteMachine)
 	router.POST("/machine", service.CreateMachine)
-	router.PUT("/machine", service.UpdateMachine)
+	router.PUT("/machine/:machine_id", service.UpdateMachine)
 
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"*"}

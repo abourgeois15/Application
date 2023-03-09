@@ -16,11 +16,11 @@ function App() {
         <Route path="/updateItem/:item_id" element={<UpdateItemPage />} />
 
         <Route path="/fullMachines" element={<MachineListPage />} />
-        <Route path="/fullMachines/name/:machine_name" element={<MachinePage />} />
+        <Route path="/fullMachines/id/:machine_id" element={<MachinePage />} />
         <Route path="/fullMachines/type/:machine_type" element={<MachineTypePage />} />
-        <Route path="/deleteMachine/:machine_name" element={<DeleteMachinePage />} />
+        <Route path="/deleteMachine/:machine_id" element={<DeleteMachinePage />} />
         <Route path="/createMachine" element={<CreateMachinePage />} />
-        <Route path="/updateMachine/:machine_name" element={<UpdateMachinePage />} />
+        <Route path="/updateMachine/:machine_id" element={<UpdateMachinePage />} />
       </Routes>
     </Router>
   )

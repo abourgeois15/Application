@@ -28,7 +28,7 @@ func TestMachineFindAll(t *testing.T) {
 	mock.ExpectQuery("SELECT name FROM machines ORDER BY name ASC").
 		WillReturnRows(rows)
 
-	var nameList_resp []string
+	var nameList_resp []entities.Machine
 	if nameList_resp, err = machineModel.FindAll(); err != nil {
 		t.Errorf("error was not expected while getting all machines: %s", err)
 	}
@@ -81,7 +81,7 @@ func TestMachineFindName(t *testing.T) {
 		WillReturnRows(recipeRows)
 
 	var machine_resp entities.Machine
-	if machine_resp, err = machineModel.FindName(machine.Name); err != nil {
+	if machine_resp, err = machineModel.FindId(machine.Id); err != nil {
 		t.Errorf("error was not expected while getting machine: %s", err)
 	}
 	assert.Equal(t, machine, machine_resp)
@@ -90,7 +90,7 @@ func TestMachineFindName(t *testing.T) {
 		WithArgs(machine.Name).
 		WillReturnError(fmt.Errorf("some error"))
 
-	if machine_resp, err = machineModel.FindName(machine.Name); err == nil {
+	if machine_resp, err = machineModel.FindId(machine.Id); err == nil {
 		t.Errorf("error was expected while getting machine: %s", err)
 	}
 	assert.Equal(t, entities.Machine{}, machine_resp)
@@ -120,7 +120,7 @@ func TestMachineFindType(t *testing.T) {
 		WithArgs(mtype).
 		WillReturnRows(rows)
 
-	var nameList_resp []string
+	var nameList_resp []entities.Machine
 	if nameList_resp, err = machineModel.FindType(mtype); err != nil {
 		t.Errorf("error was not expected while getting machine: %s", err)
 	}
@@ -151,21 +151,21 @@ func TestMachineDelete(t *testing.T) {
 	defer db.Close()
 
 	res := sqlmock.NewResult(0, 1)
-	name := "Assembling machine 1"
+	id := 1
 
 	mock.ExpectExec("DELETE FROM machines WHERE name=?").
-		WithArgs(name).
+		WithArgs(id).
 		WillReturnResult(res)
 
-	if _, err = machineModel.Delete(name); err != nil {
+	if _, err = machineModel.Delete(id); err != nil {
 		t.Errorf("error was not expected while deleting machine: %s", err)
 	}
 
 	mock.ExpectExec("DELETE FROM machines WHERE name=?").
-		WithArgs(name).
+		WithArgs(id).
 		WillReturnError(fmt.Errorf("some error"))
 
-	if _, err = machineModel.Delete(name); err == nil {
+	if _, err = machineModel.Delete(id); err == nil {
 		t.Errorf("error was not expected while deleting machine: %s", err)
 	}
 

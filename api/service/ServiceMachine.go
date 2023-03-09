@@ -6,6 +6,7 @@ import (
 	mysqloperations "api/mysql"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -74,7 +75,7 @@ func UpdateMachine(c *gin.Context) {
 
 func DeleteMachine(c *gin.Context) {
 	db, err := config.GetMySQLDB()
-	name := c.Param("machine_name")
+	id, err := strconv.Atoi(c.Param("machine_id"))
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
@@ -83,7 +84,7 @@ func DeleteMachine(c *gin.Context) {
 		machineModel := mysqloperations.MachineModel{
 			Db: db,
 		}
-		rows, err := machineModel.Delete(name)
+		rows, err := machineModel.Delete(id)
 		if err != nil {
 			fmt.Println(err)
 		} else {
@@ -106,12 +107,12 @@ func GetAllMachines(c *gin.Context) {
 		machineModel := mysqloperations.MachineModel{
 			Db: db,
 		}
-		names, err := machineModel.FindAll()
+		machines, err := machineModel.FindAll()
 
 		if err != nil {
 			fmt.Println(err)
 		}
-		c.IndentedJSON(http.StatusOK, names)
+		c.IndentedJSON(http.StatusOK, machines)
 	}
 }
 
@@ -134,9 +135,9 @@ func GetAllTypes(c *gin.Context) {
 	}
 }
 
-func GetMachineByName(c *gin.Context) {
+func GetMachineByID(c *gin.Context) {
 	db, err := config.GetMySQLDB()
-	name := c.Param("machine_name")
+	id, err := strconv.Atoi(c.Param("machine_id"))
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
@@ -145,7 +146,7 @@ func GetMachineByName(c *gin.Context) {
 		machineModel := mysqloperations.MachineModel{
 			Db: db,
 		}
-		machine, err := machineModel.FindName(name)
+		machine, err := machineModel.FindId(id)
 
 		if err != nil {
 			fmt.Println(err)

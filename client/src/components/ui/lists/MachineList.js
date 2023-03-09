@@ -3,17 +3,16 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../item.css";
 
-const MachineList = ({names}) => {
+const MachineList = ({machines}) => {
   const navigate = useNavigate();
-  const navigateToMachine = (name) => {
+  const navigateToMachine = (id) => {
     // 👇️ navigate to /
-    console.log(name)
-    navigate("/fullMachines/name/" + name);
+    navigate("/fullMachines/id/" + id);
   };
-  return names.map((name, index) => (
+  return machines.map((machine, index) => (
     <div data-cy="machine-container" className="container" key={index}>
       <div data-cy="machine" className="itemContainer">
-        <p data-cy={name+"_cy"} className="title" onClick={() => {navigateToMachine(name)}}>{name}</p>
+        <p data-cy={machine.name+"_cy"} className="title" onClick={() => {navigateToMachine(machine.id)}}>{machine.name}</p>
       </div>
     </div>
   ));
