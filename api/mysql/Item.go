@@ -94,7 +94,7 @@ func (itemModel ItemModel) Create(item *entities.Item) (int64, error) {
 		return 0, err
 	}
 	for _, ingredient := range item.Recipe {
-		_, err = itemModel.Db.Exec("INSERT INTO recipes(item, number, ingredient) VALUES (?,?,(SELECT id FROM items WHERE name=?))", item.Id, ingredient.Number, ingredient.Item)
+		_, err = itemModel.Db.Exec("INSERT INTO recipes(itemId, number, ingredientId) VALUES ((SELECT id FROM items WHERE name=?),?,(SELECT id FROM items WHERE name=?))", item.Name, ingredient.Number, ingredient.Item)
 		if err != nil {
 			return 0, err
 		}
