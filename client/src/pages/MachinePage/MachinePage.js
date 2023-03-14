@@ -28,8 +28,8 @@ export const MachinePage = () => {
     <div data-cy="machine-page" style={{ textAlign: "center" }}>
       <h1  data-cy="header" style={{ textAlign: "center"}}>Machine</h1>
         <button data-cy="A-goback-button" className="buttonA buttonAA" onClick={navigateToMachines}>Go Back Machine Page</button>
-        <button data-cy="A-delete-button" className="buttonA buttonAA" onClick={() => {navigateToDelete(params.machine_name)}}>Delete Machine</button>
-        <button data-cy="A-update-button" className="buttonA buttonAA" onClick={() => {navigateToUpdate(params.machine_name)}}>Modify Machine</button>
+        <button data-cy="A-delete-button" className="buttonA buttonAA" onClick={() => {navigateToDelete(params.machine_id)}}>Delete Machine</button>
+        <button data-cy="A-update-button" className="buttonA buttonAA" onClick={() => {navigateToUpdate(params.machine_id)}}>Modify Machine</button>
         <Machine machine={machine}/>
     </div>
   );

@@ -26,14 +26,14 @@ func TestMachineTestSuite(t *testing.T) {
 func (s *MachineTestSuite) SetupSuite() {
 	config.ConnectMySQLDBTest()
 	router := gin.Default()
-	router.POST("/tables", service.CreateTables)
 	router.GET("/machines", service.GetAllMachines)
-	router.GET("/machines/type", service.GetAllTypes)
-	router.GET("/machine/name/:machine_name", service.GetMachineByID)
-	router.GET("/machine/type/:machine_type", service.GetMachineByType)
-	router.DELETE("/machine/:machine_name", service.DeleteMachine)
-	router.POST("/machine", service.CreateMachine)
-	router.PUT("/machine", service.UpdateMachine)
+	router.GET("/machines?", service.GetMachineByID, service.GetMachineByType)
+	router.POST("/machines", service.CreateMachine)
+	router.GET("/machines/:id", service.GetMachineByID)
+	router.PUT("/machines/:id", service.UpdateMachine)
+	router.DELETE("/machines/:id", service.DeleteMachine)
+
+	router.GET("/machine-types", service.GetAllMachineTypes)
 	go router.Run("localhost:8080")
 	s.Router = router
 }

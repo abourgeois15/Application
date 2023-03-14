@@ -26,12 +26,11 @@ func TestItemTestSuite(t *testing.T) {
 func (s *ItemTestSuite) SetupSuite() {
 	config.ConnectMySQLDBTest()
 	router := gin.Default()
-	router.POST("/tables", service.CreateTables)
 	router.GET("/items", service.GetAllItems)
-	router.GET("/item/:item_name", service.GetItemByName)
-	router.DELETE("/item/:item_name", service.DeleteItem)
-	router.POST("/item", service.CreateItem)
-	router.PUT("/item", service.UpdateItem)
+	router.POST("/items", service.CreateItem)
+	router.GET("/items/:id", service.GetItemByID)
+	router.DELETE("/items/:id", service.DeleteItem)
+	router.PUT("/items/:id", service.UpdateItem)
 	go router.Run("localhost:8080")
 	s.Router = router
 }

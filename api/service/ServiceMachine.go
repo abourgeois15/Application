@@ -3,7 +3,7 @@ package service
 import (
 	"api/config"
 	"api/entities"
-	mysqloperations "api/mysql"
+	"api/mysql"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -21,7 +21,7 @@ func CreateMachine(c *gin.Context) {
 		return
 	}
 
-	machineModel := mysqloperations.MachineModel{
+	model := mysql.Model{
 		Db: db,
 	}
 	machine := entities.Machine{
@@ -31,7 +31,7 @@ func CreateMachine(c *gin.Context) {
 		Type:   createdMachine.Type,
 		Speed:  createdMachine.Speed,
 	}
-	rows, err := machineModel.Create(&machine)
+	rows, err := model.CreateMachine(&machine)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -51,7 +51,7 @@ func UpdateMachine(c *gin.Context) {
 		return
 	}
 
-	machineModel := mysqloperations.MachineModel{
+	model := mysql.Model{
 		Db: db,
 	}
 	machine := entities.Machine{
@@ -62,7 +62,7 @@ func UpdateMachine(c *gin.Context) {
 		Type:   createdMachine.Type,
 		Speed:  createdMachine.Speed,
 	}
-	rows, err := machineModel.Update(machine)
+	rows, err := model.UpdateMachine(machine)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -81,10 +81,10 @@ func DeleteMachine(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		machineModel := mysqloperations.MachineModel{
+		model := mysql.Model{
 			Db: db,
 		}
-		rows, err := machineModel.Delete(id)
+		rows, err := model.DeleteMachine(id)
 		if err != nil {
 			fmt.Println(err)
 		} else {
@@ -104,10 +104,10 @@ func GetAllMachines(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		machineModel := mysqloperations.MachineModel{
+		model := mysql.Model{
 			Db: db,
 		}
-		machines, err := machineModel.FindAll()
+		machines, err := model.FindAllMachines()
 
 		if err != nil {
 			fmt.Println(err)
@@ -116,17 +116,17 @@ func GetAllMachines(c *gin.Context) {
 	}
 }
 
-func GetAllTypes(c *gin.Context) {
+func GetAllMachineTypes(c *gin.Context) {
 	db, err := config.GetMySQLDB()
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		machineModel := mysqloperations.MachineModel{
+		model := mysql.Model{
 			Db: db,
 		}
-		types, err := machineModel.FindAllTypes()
+		types, err := model.FindAllTypes()
 
 		if err != nil {
 			fmt.Println(err)
@@ -137,16 +137,16 @@ func GetAllTypes(c *gin.Context) {
 
 func GetMachineByID(c *gin.Context) {
 	db, err := config.GetMySQLDB()
-	id, err := strconv.Atoi(c.Param("machine_id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		machineModel := mysqloperations.MachineModel{
+		model := mysql.Model{
 			Db: db,
 		}
-		machine, err := machineModel.FindId(id)
+		machine, err := model.FindMachineById(id)
 
 		if err != nil {
 			fmt.Println(err)
@@ -163,10 +163,10 @@ func GetMachineByType(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		machineModel := mysqloperations.MachineModel{
+		model := mysql.Model{
 			Db: db,
 		}
-		machines, err := machineModel.FindType(mtype)
+		machines, err := model.FindMachinesByType(mtype)
 
 		if err != nil {
 			fmt.Println(err)

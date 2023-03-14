@@ -3,45 +3,13 @@ package service
 import (
 	"api/config"
 	"api/entities"
-	mysqloperations "api/mysql"
+	"api/mysql"
 	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
-
-func CreateTables(c *gin.Context) {
-	db, _ := config.GetMySQLDB()
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-
-	itemModel := mysqloperations.ItemModel{Db: db}
-	rows, err := itemModel.CreateTables()
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		if rows > 0 {
-			fmt.Println("done")
-		}
-		c.IndentedJSON(http.StatusCreated, rows)
-	}
-}
-
-func DeleteTableItem(c *gin.Context) {
-	db, _ := config.GetMySQLDB()
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-
-	itemModel := mysqloperations.ItemModel{Db: db}
-	rows, err := itemModel.DeleteTable()
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		if rows > 0 {
-			fmt.Println("done")
-		}
-		c.IndentedJSON(http.StatusOK, rows)
-	}
-}
 
 func CreateItem(c *gin.Context) {
 	db, _ := config.GetMySQLDB()
@@ -53,7 +21,7 @@ func CreateItem(c *gin.Context) {
 		return
 	}
 
-	itemModel := mysqloperations.ItemModel{Db: db}
+	model := mysql.Model{Db: db}
 	item := entities.Item{
 		Name:        createdItem.Name,
 		Time:        createdItem.Time,
@@ -61,7 +29,7 @@ func CreateItem(c *gin.Context) {
 		Result:      createdItem.Result,
 		MachineType: createdItem.MachineType,
 	}
-	rows, err := itemModel.Create(&item)
+	rows, err := model.CreateItem(&item)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -81,7 +49,7 @@ func UpdateItem(c *gin.Context) {
 		return
 	}
 
-	itemModel := mysqloperations.ItemModel{Db: db}
+	model := mysql.Model{Db: db}
 	item := entities.Item{
 		Id:          createdItem.Id,
 		Name:        createdItem.Name,
@@ -90,7 +58,7 @@ func UpdateItem(c *gin.Context) {
 		Result:      createdItem.Result,
 		MachineType: createdItem.MachineType,
 	}
-	rows, err := itemModel.Update(item)
+	rows, err := model.UpdateItem(item)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -103,14 +71,14 @@ func UpdateItem(c *gin.Context) {
 
 func DeleteItem(c *gin.Context) {
 	db, err := config.GetMySQLDB()
-	id, err := strconv.Atoi(c.Param("item_id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		itemModel := mysqloperations.ItemModel{Db: db}
-		rows, err := itemModel.Delete(id)
+		model := mysql.Model{Db: db}
+		rows, err := model.DeleteItem(id)
 		if err != nil {
 			fmt.Println(err)
 		} else {
@@ -130,8 +98,8 @@ func GetAllItems(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		itemModel := mysqloperations.ItemModel{Db: db}
-		items, err := itemModel.FindAll()
+		model := mysql.Model{Db: db}
+		items, err := model.FindAllItems()
 
 		if err != nil {
 			fmt.Println(err)
@@ -140,16 +108,16 @@ func GetAllItems(c *gin.Context) {
 	}
 }
 
-func GetItemByName(c *gin.Context) {
+func GetItemByID(c *gin.Context) {
 	db, err := config.GetMySQLDB()
-	id, err := strconv.Atoi(c.Param("item_id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		itemModel := mysqloperations.ItemModel{Db: db}
-		items, err := itemModel.Find(id)
+		model := mysql.Model{Db: db}
+		items, err := model.FindItem(id)
 
 		if err != nil {
 			fmt.Println(err)
